@@ -1,0 +1,28 @@
+{
+  "name": "gfg-webapp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "clean": "node clean/clean.js",
+    "competitionBuild": "node prestart/builds/competitionBuild.js",
+    "teamBuild": "node prestart/builds/teamBuild.js",
+    "playerBuild": "node prestart/builds/playerBuild.js",
+    "start": "node app.js",
+    "prestart": "npm run competitionBuild && npm run teamBuild && npm run playerBuild",
+    "restart": "npm run clean && npm start",
+    "test": "test"
+  },
+  "author": "ahmed-alzahrani",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.3",
+    "json-fs-store": "^1.0.1",
+    "node-dir": "^0.1.17",
+    "npm": "^6.0.1",
+    "request": "^2.86.0",
+    "request-promise": "^4.2.2",
+    "rimraf": "^2.6.2",
+    "xmlhttprequest": "^1.8.0"
+  }
+}
