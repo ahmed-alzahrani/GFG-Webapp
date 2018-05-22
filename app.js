@@ -12,12 +12,7 @@ app.get('/team/:teamId', function (req, res) {
 })
 
 app.get('/allPlayers', function (req, res) {
-  console.log('preparing all players...')
-  var players = {
-    id: 'hi'
-  }
-  players = playerService.getPlayers()
-  res.send(players)
+  res.send(playerService.getPlayers())
 })
 
 app.listen(8080, function() {
