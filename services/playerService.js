@@ -29,7 +29,7 @@ teamStore.list(function(err, objects) {
       let player = squad[x]
 
       // edit some player info before we add it to our array
-  //    adjustPosition(player)
+      adjustPosition(player)
       player.team = teamName
       player.team_id = team_id
       player.league = league
@@ -38,10 +38,11 @@ teamStore.list(function(err, objects) {
   }
   // send the player array to be written in JSON in the proper Resource folder
   writePlayers(playerArr)
+  console.log('number of players is... ' + playerArr.length)
 })
 }
 
-/*
+
 function adjustPosition(player) {
   switch (player.position) {
     case "G":
@@ -52,16 +53,15 @@ function adjustPosition(player) {
       player.position = "Defender"
       break
 
-    case "M"
+    case "M":
       player.position = "Midfielder"
       break
 
-    case "A"
+    case "A":
       player.position = "Attacker"
       break
   }
 }
-*/
 
 function getPlayers() {
 

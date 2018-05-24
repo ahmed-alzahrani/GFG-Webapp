@@ -17,3 +17,10 @@ reduces the work-load of the client.
 4. Continually check with the football api service for live match information and store live matches to be compared with the latest information in order to alert users of live goals
 
 5. When a live goal is found, iterate over the user DB and alter the appropriate users, then send them push notifications on their device.
+
+
+### Change-log
+
+__24/05/18__
+
+- Added switch statement in playerService to map player positions correctly ie: G --> Goalkeeper, M --> Midfielder etc
