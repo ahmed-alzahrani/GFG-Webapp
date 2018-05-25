@@ -24,3 +24,9 @@ reduces the work-load of the client.
 __24/05/18__
 
 - Added switch statement in playerService to map player positions correctly ie: G --> Goalkeeper, M --> Midfielder etc
+
+__25/05/18__
+
+- fixed linter errors in playerService
+
+- used async fetch/wait in playerService to add /getPlayer/:playerID route so client could populate playerDetails page

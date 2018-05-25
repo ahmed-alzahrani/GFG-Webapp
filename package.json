@@ -19,6 +19,7 @@
     "express": "^4.16.3",
     "json-fs-store": "^1.0.1",
     "node-dir": "^0.1.17",
+    "node-fetch": "^2.1.2",
     "npm": "^6.1.0",
     "request": "^2.86.0",
     "request-promise": "^4.2.2",
