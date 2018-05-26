@@ -30,3 +30,5 @@ __25/05/18__
 - fixed linter errors in playerService
 
 - used async fetch/wait in playerService to add /getPlayer/:playerID route so client could populate playerDetails page
+
+- added a charitiesBuild and charitiesService, now hard-coded JSON info on different charities will be written to Resources on prestart, and is served at the route /charities

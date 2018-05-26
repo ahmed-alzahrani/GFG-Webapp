@@ -30,7 +30,7 @@ function createPlayers () {
     // we extract info that we want accesible to our player from the teams
       let squad = objects[i].squad
       let teamName = objects[i].id
-      let team_id = objects[i].team_id
+      let teamId = objects[i].team_id
       let league = objects[i].league
       for (var x = 0; x < squad.length; x++) {
         let player = squad[x]
@@ -38,7 +38,7 @@ function createPlayers () {
         // edit some player info before we add it to our array
         adjustPosition(player)
         player.team = teamName
-        player.team_id = team_id
+        player.team_id = teamId
         player.league = league
         playerArr.push(player)
       }
