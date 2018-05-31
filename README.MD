@@ -32,3 +32,17 @@ __25/05/18__
 - used async fetch/wait in playerService to add /getPlayer/:playerID route so client could populate playerDetails page
 
 - added a charitiesBuild and charitiesService, now hard-coded JSON info on different charities will be written to Resources on prestart, and is served at the route /charities
+
+__31/05/18__
+
+- fixed linter errors in teamService
+
+- added adminService to handle communication with Firebase, currently authenticates new users and writes them to the realtime DB with empty subscription array provided a proper Post request
+
+- added POST route for /addUser that expects to be provided a JSON object with the following fields:
+              {
+                email: 'userEmail',
+                password: 'userPassword'
+              }
+
+- added generation of custom token when a user is created, need to fix callback structure of user creation to serve token to client
