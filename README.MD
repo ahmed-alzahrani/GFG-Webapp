@@ -46,3 +46,7 @@ __31/05/18__
               }
 
 - added generation of custom token when a user is created, need to fix callback structure of user creation to serve token to client
+
+__01/06/18__
+
+- call to postUser and callback structure has been fixed, the route now creates the user and writes them in the DB, but serves up their custom JWT token in response
