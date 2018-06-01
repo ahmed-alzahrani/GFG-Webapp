@@ -28,8 +28,9 @@ app.get('/charities', function (req, res) {
 })
 
 app.post('/addUser', function (req, res) {
-  adminService.postUser(req.body)
-  res.send('user has been added')
+  adminService.postUser(req.body).then(function (token) {
+    res.send(token)
+  })
 })
 
 app.listen(8080, function () {
