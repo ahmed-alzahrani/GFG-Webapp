@@ -50,3 +50,5 @@ __31/05/18__
 __01/06/18__
 
 - call to postUser and callback structure has been fixed, the route now creates the user and writes them in the DB, but serves up their custom JWT token in response
+
+- removed deprecated Dependency 'xmlhttprequest', all reqs now down with request-promise or fetch, would like to migrate all calls rp --> fetch

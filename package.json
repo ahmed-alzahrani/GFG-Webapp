@@ -26,7 +26,6 @@
     "npm": "^6.1.0",
     "request": "^2.86.0",
     "request-promise": "^4.2.2",
-    "rimraf": "^2.6.2",
-    "xmlhttprequest": "^1.8.0"
+    "rimraf": "^2.6.2"
   }
 }
