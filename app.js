@@ -8,16 +8,19 @@ let charitiesService = require('./services/charitiesService.js')
 
 app.use(bodyParser.json())
 
+/* TODO:
+*/
+
 // set up our routes
 app.get('/', function (req, res) {
   res.send('hello world')
 })
 
-app.get('/allPlayers', function (req, res) {
+app.get('/players', function (req, res) {
   res.send(playerService.getPlayers())
 })
 
-app.get('/getPlayer/:playerId', function (req, res) {
+app.get('/player/:playerId', function (req, res) {
   playerService.getPlayer(req.params.playerId).then(function (player) {
     res.send(player)
   })
@@ -28,8 +31,8 @@ app.get('/charities', function (req, res) {
 })
 
 app.post('/addUser', function (req, res) {
-  adminService.postUser(req.body).then(function (token) {
-    res.send(token)
+  adminService.addUser(req.body).then(function (response) {
+    res.send(response)
   })
 })
 

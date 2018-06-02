@@ -52,3 +52,7 @@ __01/06/18__
 - call to postUser and callback structure has been fixed, the route now creates the user and writes them in the DB, but serves up their custom JWT token in response
 
 - removed deprecated Dependency 'xmlhttprequest', all reqs now down with request-promise or fetch, would like to migrate all calls rp --> fetch
+
+__02/06/18__
+
+- Migrated auth to client, admin addUser route now just handles writing to Firestore NoSQL server
