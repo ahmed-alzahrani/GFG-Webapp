@@ -19,7 +19,7 @@ function writeUser (user) {
     name: '',
     email: user.email
   }
-  db.collection('users').document(user.uid).setData(obj).then(function () {
+  db.collection('users').doc(user.uid).set(obj).then(function () {
     let response = 'User document successfully written!'
     console.log(response)
     return response
