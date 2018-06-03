@@ -8,30 +8,45 @@ let charitiesService = require('./services/charitiesService.js')
 
 app.use(bodyParser.json())
 
-/* TODO:
-*/
-
 // set up our routes
 app.get('/', function (req, res) {
   res.send('hello world')
 })
 
 app.get('/players', function (req, res) {
-  res.send(playerService.getPlayers())
+  res.send(playerService.players())
 })
 
 app.get('/player/:playerId', function (req, res) {
-  playerService.getPlayer(req.params.playerId).then(function (player) {
+  playerService.player(req.params.playerId).then(function (player) {
     res.send(player)
   })
 })
 
 app.get('/charities', function (req, res) {
-  res.send(charitiesService.getCharities())
+  res.send(charitiesService.charities())
 })
 
 app.post('/addUser', function (req, res) {
   adminService.addUser(req.body).then(function (response) {
+    res.send(response)
+  })
+})
+
+app.post('/amISubscribed', function (req, res) {
+  adminService.amISubscribed(req.body).then(function (response) {
+    res.send(response)
+  })
+})
+
+app.post('/subscribe', function (req, res) {
+  adminService.subscribe(req.body).then(function (response) {
+    res.send(response)
+  })
+})
+
+app.post('/unsubscribe', function (req, res) {
+  adminService.unsubscribe(req.body).then(function (response) {
     res.send(response)
   })
 })

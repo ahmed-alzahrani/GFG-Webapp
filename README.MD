@@ -56,3 +56,7 @@ __01/06/18__
 __02/06/18__
 
 - Migrated auth to client, admin addUser route now just handles writing to Firestore NoSQL server
+
+- added POST routes for /amISubscribed, /subscribe, and /unsubscribe to allow users to add and remove players from their subscription list
+
+- simplified certain API endpoints ie: getPlayers -> players

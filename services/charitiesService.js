@@ -5,7 +5,7 @@ exports.populateCharities = function () {
   createCharities()
 }
 
-exports.getCharities = function () {
+exports.charities = function () {
   var obj = JSON.parse(fs.readFileSync('Resources/Charities/charities.json', 'utf8'))
   return obj.charities
 }

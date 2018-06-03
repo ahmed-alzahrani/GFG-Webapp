@@ -8,12 +8,12 @@ exports.populatePlayers = function () {
   createPlayers()
 }
 
-exports.getPlayers = function () {
+exports.players = function () {
   var obj = JSON.parse(fs.readFileSync('Resources/Players/players.json', 'utf8'))
   return obj.players
 }
 
-exports.getPlayer = async function (playerId) {
+exports.player = async function (playerId) {
   let url = config.baseUrl + 'player/' + playerId + '?Authorization=' + config.apiKey
   let response = await fetch(url)
   let data = await response.json()
