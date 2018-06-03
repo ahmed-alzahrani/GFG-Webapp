@@ -33,28 +33,24 @@ function writeUser (user) {
     name: '',
     email: user.email
   }
-  db.collection('users').doc(user.uid).set(obj).then(function () {
-    let response = 'User document successfully written!'
-    console.log(response)
-    return response
+  let response = db.collection('users').doc(user.uid).set(obj).then(function () {
+    return generateResponse('User document successfully written!')
   }).catch(function (error) {
-    let response = 'Error writing user document: ' + error
-    console.log(response)
-    return response
+    return generateResponse('Error writing user document: ' + error)
   })
+  return response
 }
 
 function subscriptionCheck (request) {
   var subscriptionRef = db.collection('users').doc(request.uid).collection('subscriptions').doc(request.playerId)
-  subscriptionRef.get().then(function (doc) {
+  let response = subscriptionRef.get().then(function (doc) {
     if (doc.exists) {
-      console.log('Document data: ', doc.data())
-      return true
+      return generateResponse(true)
     } else {
-      console.log('No such document!')
-      return false
+      return generateResponse(false)
     }
   })
+  return response
 }
 
 function addSubscription (request) {
@@ -67,25 +63,27 @@ function addSubscription (request) {
     time: timeString
   }
 
-  db.collection('users').doc(request.uid).collection('subscriptions').doc(request.playerId).set(obj).then(function () {
-    let response = 'Subscription successfully added!'
-    console.log(response)
-    return response
+  let response = db.collection('users').doc(request.uid).collection('subscriptions').doc(request.playerId).set(obj).then(function () {
+    return generateResponse('Subscription successfully added!')
   }).catch(function (error) {
-    let response = 'Error adding new subscription: ' + error
-    console.log(response)
-    return response
+    return generateResponse('Error adding new subscription: ' + error)
   })
+  return response
 }
 
 function removeSubscription (request) {
-  db.collection('users').doc(request.uid).collection('subscriptions').doc(request.playerId).delete().then(function () {
-    let response = 'Subscription successfully removed!'
-    console.log(response)
-    return response
+  let response = db.collection('users').doc(request.uid).collection('subscriptions').doc(request.playerId).delete().then(function () {
+    return generateResponse('Subscription successfully removed!')
   }).catch(function (error) {
-    let response = 'Error removing document: ' + error
-    console.log(response)
-    return response
+    return generateResponse('Error removing document: ' + error)
   })
+  return response
+}
+
+function generateResponse (result) {
+  let response = {
+    result: result
+  }
+  console.log(response)
+  return response
 }
