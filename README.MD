@@ -60,3 +60,7 @@ __02/06/18__
 - added POST routes for /amISubscribed, /subscribe, and /unsubscribe to allow users to add and remove players from their subscription list
 
 - simplified certain API endpoints ie: getPlayers -> players
+
+__05/06/18__
+
+- added boolean result value to response object passed back to client from calls to sub/unsub
