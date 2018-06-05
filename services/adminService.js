@@ -34,9 +34,9 @@ function writeUser (user) {
     email: user.email
   }
   let response = db.collection('users').doc(user.uid).set(obj).then(function () {
-    return generateResponse('User document successfully written!')
+    return generateResponse(true, 'User document successfully written!')
   }).catch(function (error) {
-    return generateResponse('Error writing user document: ' + error)
+    return generateResponse(false, 'Error writing user document: ' + error)
   })
   return response
 }
@@ -45,9 +45,9 @@ function subscriptionCheck (request) {
   var subscriptionRef = db.collection('users').doc(request.uid).collection('subscriptions').doc(request.playerId)
   let response = subscriptionRef.get().then(function (doc) {
     if (doc.exists) {
-      return generateResponse(true)
+      return generateResponse(true, 'Subscription exists')
     } else {
-      return generateResponse(false)
+      return generateResponse(false, 'Subscription does not exist')
     }
   })
   return response
@@ -64,25 +64,26 @@ function addSubscription (request) {
   }
 
   let response = db.collection('users').doc(request.uid).collection('subscriptions').doc(request.playerId).set(obj).then(function () {
-    return generateResponse('Subscription successfully added!')
+    return generateResponse(true, 'Subscription successfully added!')
   }).catch(function (error) {
-    return generateResponse('Error adding new subscription: ' + error)
+    return generateResponse(false, 'Error adding new subscription: ' + error)
   })
   return response
 }
 
 function removeSubscription (request) {
   let response = db.collection('users').doc(request.uid).collection('subscriptions').doc(request.playerId).delete().then(function () {
-    return generateResponse('Subscription successfully removed!')
+    return generateResponse(true, 'Subscription successfully removed!')
   }).catch(function (error) {
-    return generateResponse('Error removing document: ' + error)
+    return generateResponse(false, 'Error removing document: ' + error)
   })
   return response
 }
 
-function generateResponse (result) {
+function generateResponse (result, message) {
   let response = {
-    result: result
+    result: result,
+    message: message
   }
   console.log(response)
   return response
