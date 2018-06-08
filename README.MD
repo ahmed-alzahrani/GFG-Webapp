@@ -52,4 +52,4 @@ Once the packages have been installed, the following npm commands are available 
 - Populate the /Resources directory and then launch the app to listen on localhost:8080
 `npm start`
 
-- Clean out the /Resources directory, then re-populate it and launch the app to listen on localhost:8080
+- Clean out the /Resources directory, then re-populate it and launch the app to listen on localhost:8080 `npm restart`
