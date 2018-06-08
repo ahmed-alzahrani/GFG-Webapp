@@ -18,53 +18,38 @@ reduces the work-load of the client.
 
 5. When a live goal is found, iterate over the user DB and alter the appropriate users, then send them push notifications on their device.
 
+### Dependencies
 
-### Change-log
+1. Users should ensure they have [node js](https://nodejs.org/en/) installed
 
-__24/05/18__
+2. Users need to create a [Firebase](https://firebase.google.com/) project in order to retrieve a service account and access an instance of Firebase Firestore NoSQL DB.
 
-- Added switch statement in playerService to map player positions correctly ie: G --> Goalkeeper, M --> Midfielder etc
+        1. Create an account, navigate to the Firebase console and use the 'Add Project' dialog.
 
-__25/05/18__
+        2. Navigate to the [Service Accounts](https://console.firebase.google.com/project/_/settings/serviceaccounts/adminsdk) tab in your project's settings page.
 
-- fixed linter errors in playerService
+        3. Click the 'Generate New Private Key' button at the bottom of the Firebase Admin SDK section of the Service Accounts tab.
 
-- used async fetch/wait in playerService to add /getPlayer/:playerID route so client could populate playerDetails page
+        4. Once the button is clicked, a JSON file containing your service account credentials will be downloaded. You'll need this file as part of the config required to run the server as detailed below.
 
-- added a charitiesBuild and charitiesService, now hard-coded JSON info on different charities will be written to Resources on prestart, and is served at the route /charities
 
-__31/05/18__
+3. Along with the Service Account info, you will need to include in a directory called 'config' at the root of the project a config.js and charities.json files that include the football service Api Key and competition IDs, urlPath to the service account and baseUrl for the football query. The charities file includes all relevant information on the charities that users can donate to.
 
-- fixed linter errors in teamService
 
-- added adminService to handle communication with Firebase, currently authenticates new users and writes them to the realtime DB with empty subscription array provided a proper Post request
+### Installation / Running
 
-- added POST route for /addUser that expects to be provided a JSON object with the following fields:
-              {
-                email: 'userEmail',
-                password: 'userPassword'
-              }
+- After cloning the repo, navigate into the root of the project and run the following command in order to install necessary packages
+`npm install`
 
-- added generation of custom token when a user is created, need to fix callback structure of user creation to serve token to client
+Once the packages have been installed, the following npm commands are available for you:
 
-__01/06/18__
+- Populate the /Resources directory with all of the competition, team, and player JSON information without actually launching the server:
+`npm prestart`
 
-- call to postUser and callback structure has been fixed, the route now creates the user and writes them in the DB, but serves up their custom JWT token in response
+- Clean out any information in the /Resources directory
+`npm run clean`
 
-- removed deprecated Dependency 'xmlhttprequest', all reqs now down with request-promise or fetch, would like to migrate all calls rp --> fetch
+- Populate the /Resources directory and then launch the app to listen on localhost:8080
+`npm start`
 
-__02/06/18__
-
-- Migrated auth to client, admin addUser route now just handles writing to Firestore NoSQL server
-
-- added POST routes for /amISubscribed, /subscribe, and /unsubscribe to allow users to add and remove players from their subscription list
-
-- simplified certain API endpoints ie: getPlayers -> players
-
-__05/06/18__
-
-- added boolean result value to response object passed back to client from
-
-__07/06/18__
-
-- added charityId field to subscriptions that are added to the Firestore NoSQL DB through the server
+- Clean out the /Resources directory, then re-populate it and launch the app to listen on localhost:8080 `npm restart`
