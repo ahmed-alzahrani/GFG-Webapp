@@ -59,7 +59,8 @@ function addSubscription (request) {
 
   let obj = {
     name: request.name,
-    charity: request.charity,
+    charity: request.charityName,
+    charityId: request.charityId,
     time: timeString
   }
 

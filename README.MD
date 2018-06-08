@@ -63,4 +63,8 @@ __02/06/18__
 
 __05/06/18__
 
-- added boolean result value to response object passed back to client from calls to sub/unsub
+- added boolean result value to response object passed back to client from
+
+__07/06/18__
+
+- added charityId field to subscriptions that are added to the Firestore NoSQL DB through the server
