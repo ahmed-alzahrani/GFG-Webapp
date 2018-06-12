@@ -28,6 +28,11 @@ exports.unsubscribe = async function (request) {
   return response
 }
 
+exports.getSubscriptions = async function (id) {
+  let response = await subscriptions(id)
+  return response
+}
+
 function writeUser (user) {
   let obj = {
     name: '',
@@ -77,6 +82,25 @@ function removeSubscription (request) {
     return generateResponse(true, 'Subscription successfully removed!')
   }).catch(function (error) {
     return generateResponse(false, 'Error removing document: ' + error)
+  })
+  return response
+}
+
+function subscriptions (id) {
+  let response = db.collection('users').doc(id).collection('subscriptions').get().then(function (querySnapshot) {
+    let collection = []
+    querySnapshot.forEach(function (doc) {
+      let obj = {
+        id: doc.id,
+        subscription: doc.data()
+      }
+      console.log('lets look at the object we are adding to the collection')
+      console.log(obj)
+      collection += obj
+    })
+    return generateResponse(collection, 'Successfully retrieved subscriptions!')
+  }).catch(function (error) {
+    return generateResponse([], 'Error retrieving subscriptions: ' + error)
   })
   return response
 }

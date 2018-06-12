@@ -30,6 +30,12 @@ app.get('/charities', function (req, res) {
   res.send(charitiesService.charities())
 })
 
+app.get('/subscriptions/:userId', function (req, res) {
+  adminService.getSubscriptions(req.params.userId).then(function (response) {
+    res.send(response)
+  })
+})
+
 app.post('/addUser', function (req, res) {
   adminService.addUser(req.body).then(function (response) {
     res.send(response)

@@ -54,4 +54,8 @@ __08/06/18__
 
 - Added Setup instructions to README in it's place
 
-- Moved Service Account path from actual instantiaton of admin in adminService to config to generalize the repo
+- Moved Service Account path from actual instantiating of admin in adminService to config to generalize the repo
+
+__12/06/18__
+
+- Added Route for /subscriptions/:userId to return a user their list of subscriptions
