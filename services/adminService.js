@@ -94,9 +94,7 @@ function subscriptions (id) {
         id: doc.id,
         subscription: doc.data()
       }
-      console.log('lets look at the object we are adding to the collection')
-      console.log(obj)
-      collection += obj
+      collection.push(obj)
     })
     return collection
   }).catch(function (error) {

@@ -12,6 +12,7 @@
     "start": "node app.js",
     "prestart": "npm run competitionBuild && npm run teamBuild && npm run playerBuild && npm run charitiesBuild",
     "restart": "npm run clean && npm start",
+    "quickstart": "node app.js",
     "test": "test"
   },
   "author": "ahmed-alzahrani",
