@@ -92,7 +92,7 @@ function subscriptions (id) {
     querySnapshot.forEach(function (doc) {
       let obj = {
         id: doc.id,
-        subscription: doc.data()
+        data: doc.data()
       }
       collection.push(obj)
     })
