@@ -98,9 +98,10 @@ function subscriptions (id) {
       console.log(obj)
       collection += obj
     })
-    return generateResponse(collection, 'Successfully retrieved subscriptions!')
+    return collection
   }).catch(function (error) {
-    return generateResponse([], 'Error retrieving subscriptions: ' + error)
+    console.log(error)
+    return []
   })
   return response
 }
