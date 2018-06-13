@@ -63,3 +63,9 @@ __12/06/18__
 - Added npm quickstart command to just run `node app.js` and launch the server without going through the JSON building process as is with `npm start`
 
 - Flattened subscriptions response to put id and data on the root level together
+
+__13/06/18__
+
+- Fixed linter errors in util
+
+- Added liveTestMatches to .gitignore to allow for population of test JSON info. With this, we can test the sever's ability to query for, and act upon, live match and goal data at will without relying on waiting for live matches to resume in August.
