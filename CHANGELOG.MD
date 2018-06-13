@@ -69,3 +69,7 @@ __13/06/18__
 - Fixed linter errors in util
 
 - Added liveTestMatches to .gitignore to allow for population of test JSON info. With this, we can test the sever's ability to query for, and act upon, live match and goal data at will without relying on waiting for live matches to resume in August.
+
+- Changed route that adds subscriptions to a user to include the player's team ID
+
+- Began adding /matches/:userId route that will return all matches to be played by player's the user is subscribed to for the following month

@@ -33,6 +33,11 @@ exports.getSubscriptions = async function (id) {
   return response
 }
 
+exports.getMatches = async function (id) {
+  let response = await matches(id)
+  return response
+}
+
 function writeUser (user) {
   let obj = {
     name: '',
@@ -64,6 +69,7 @@ function addSubscription (request) {
 
   let obj = {
     name: request.name,
+    team: request.team,
     charity: request.charityName,
     charityId: request.charityId,
     time: timeString
@@ -106,6 +112,10 @@ function subscriptions (id) {
     return []
   })
   return response
+}
+
+function matches (id) {
+  return {}
 }
 
 function generateResponse (result, message) {
