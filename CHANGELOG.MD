@@ -73,3 +73,5 @@ __13/06/18__
 - Changed route that adds subscriptions to a user to include the player's team ID
 
 - Began adding /matches/:userId route that will return all matches to be played by player's the user is subscribed to for the following month
+
+- Included teamName in subscription object

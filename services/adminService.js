@@ -70,6 +70,7 @@ function addSubscription (request) {
   let obj = {
     name: request.name,
     team: request.team,
+    teamName: request.teamName,
     charity: request.charityName,
     charityId: request.charityId,
     time: timeString
@@ -103,6 +104,7 @@ function subscriptions (id) {
         charityId: data.charityId,
         name: data.name,
         team: data.team,
+        teamName: data.teamName,
         time: data.time
       }
       collection.push(obj)
