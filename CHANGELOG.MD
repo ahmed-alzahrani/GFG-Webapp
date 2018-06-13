@@ -61,3 +61,5 @@ __12/06/18__
 - Added Route for /subscriptions/:userId to return a user their list of subscriptions
 
 - Added npm quickstart command to just run `node app.js` and launch the server without going through the JSON building process as is with `npm start`
+
+- Flattened subscriptions response to put id and data on the root level together

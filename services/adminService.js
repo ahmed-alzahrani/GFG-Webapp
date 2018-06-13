@@ -90,9 +90,13 @@ function subscriptions (id) {
   let response = db.collection('users').doc(id).collection('subscriptions').get().then(function (querySnapshot) {
     let collection = []
     querySnapshot.forEach(function (doc) {
+      let data = doc.data()
       let obj = {
         id: doc.id,
-        data: doc.data()
+        charity: data.charity,
+        charityId: data.charityId,
+        name: data.name,
+        time: data.time
       }
       collection.push(obj)
     })
