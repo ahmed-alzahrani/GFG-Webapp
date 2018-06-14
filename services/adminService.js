@@ -1,6 +1,10 @@
 var admin = require('firebase-admin')
 let config = require('../config/config.js')
+let fetch = require('node-fetch')
+let util = require('../util/util.js')
+
 var serviceAccount = require(config.serviceAccount)
+
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: 'https://goals-for-good.firebaseio.com'
@@ -33,9 +37,28 @@ exports.getSubscriptions = async function (id) {
   return response
 }
 
-exports.getMatches = async function (id) {
-  let response = await matches(id)
-  return response
+exports.getTeamIds = async function (id) {
+  let ids = await teamIds(id)
+  return ids
+}
+
+exports.getMatches = async function (ids) {
+  var matches = []
+  var matchIds = []
+  for (var i = 0; i < ids.length; i++) {
+    let url = util.getMatchesUrl(ids[i])
+    let response = await fetch(url)
+    let data = await response.json()
+    for (var x = 0; x < data.length; x++) {
+      if (matchIds.includes(data[x].id)) {
+        continue
+      } else {
+        matchIds.push(data[x].id)
+        matches.push(data[x])
+      }
+    }
+  }
+  return matches.sort(util.compareMatches)
 }
 
 function writeUser (user) {
@@ -117,8 +140,18 @@ function subscriptions (id) {
   return response
 }
 
-function matches (id) {
-  return {}
+function teamIds (id) {
+  var ids = []
+  let response = db.collection('users').doc(id).collection('subscriptions').get().then(function (querySnapshot) {
+    querySnapshot.forEach(function (doc) {
+      ids.push(doc.data().team)
+    })
+    return ids
+  }).catch(function (error) {
+    console.log(error)
+    return []
+  })
+  return response
 }
 
 function generateResponse (result, message) {

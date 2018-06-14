@@ -75,3 +75,15 @@ __13/06/18__
 - Began adding /matches/:userId route that will return all matches to be played by player's the user is subscribed to for the following month
 
 - Included teamName in subscription object
+
+__14/06/18__
+
+- Added `moment` dependency for gathering dates to be used in querying for matches.
+
+- finished route for GET request on /matches/:userId that returns JSON response array of all matches for players that user is subscribed to that will be played in the next month
+
+- added util functions for generating a URL to query matches with, which includes functionality for getting date strings for the current date, and one month in the future formatted as `dd.mm.yyyy`.
+
+- Also added util function to sort matches by id (and thus, date) once they have been gathered from the Football api
+
+- added getTeamIds and getMatches functionality in adminService to perform the two steps involved in querying for a user's matches, gathering the team Ids of the players subscribed to, and then querying with those for match data

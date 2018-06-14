@@ -37,8 +37,10 @@ app.get('/subscriptions/:userId', function (req, res) {
 })
 
 app.get('/matches/:userId', function (req, res) {
-  adminService.getMatches(req.params.userId).then(function (response) {
-    res.send(response)
+  adminService.getTeamIds(req.params.userId).then(function (ids) {
+    adminService.getMatches(ids).then(function (matches) {
+      res.send(matches)
+    })
   })
 })
 
