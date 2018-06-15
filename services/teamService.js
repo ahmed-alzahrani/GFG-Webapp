@@ -10,30 +10,26 @@ exports.populateTeams = function () {
 }
 
 function createTeams () {
-  logBeginning()
-  // we need to get all the competitions we built
+  // loop through competitions
   compStore.load('competitions', function (err, object) {
     if (err) throw err
-    // loop through all of the competitions
     let comps = object.competitions
-    // make sure its a competition we want to work with
     for (var i = 0; i < comps.length; i++) {
       let competition = comps[i]
       if (ids.indexOf(competition.id) > -1) {
+        // load standings data for each competition
         standingStore.load(competition.name, function (err, object) {
           let standings = object.standings
           let leagueName = object.id
-          // loop through each team per competition
+          // loop through each team in the competition
           for (var i = 0; i < standings.length; i++) {
             let team = standings[i]
-            // send the req-response to get the detailed team information
             let url = config.baseUrl + 'team/' + team.team_id + '?Authorization=' + config.apiKey
             rp({
               'method': 'GET',
               'uri': url,
               'json': true
             }).then(function (response) {
-              // add a JSON file in the Team directory with the squad of that time so we have our players
               let squad = response.squad
               let obj = {
                 id: team.team_name,
@@ -41,6 +37,7 @@ function createTeams () {
                 league: leagueName,
                 squad: squad
               }
+              // write the info about that team we receive to /Resources/Teams
               teamStore.add(obj, function (err) {
                 if (err) throw err
               })
@@ -51,12 +48,4 @@ function createTeams () {
       }
     }
   })
-}
-
-function logBeginning () {
-  console.log()
-  console.log()
-  console.log('attmempting to populate the Teams...')
-  console.log()
-  console.log()
 }

@@ -5,6 +5,7 @@ let util = require('../util/util.js')
 
 var serviceAccount = require(config.serviceAccount)
 
+// initialize Firebase admin SDK
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: 'https://goals-for-good.firebaseio.com'
@@ -42,6 +43,7 @@ exports.getTeamIds = async function (id) {
   return ids
 }
 
+// returns list of unique matches that will be played by the teams whose ids are in ids
 exports.getMatches = async function (ids) {
   var matches = []
   var matchIds = []
@@ -61,6 +63,7 @@ exports.getMatches = async function (ids) {
   return matches.sort(util.compareMatches)
 }
 
+// writes a new user object into the Firebase Firestore NoSQL database based on the auth user created
 function writeUser (user) {
   let obj = {
     name: '',
@@ -74,6 +77,7 @@ function writeUser (user) {
   return response
 }
 
+// returns to the client whether the user is subscribed already to a particular player
 function subscriptionCheck (request) {
   var subscriptionRef = db.collection('users').doc(request.uid).collection('subscriptions').doc(request.playerId)
   let response = subscriptionRef.get().then(function (doc) {
@@ -86,6 +90,7 @@ function subscriptionCheck (request) {
   return response
 }
 
+// adds a users' subscription based on the info provided in the request body
 function addSubscription (request) {
   let timestamp = new Date()
   let timeString = timestamp.toString()
@@ -107,6 +112,7 @@ function addSubscription (request) {
   return response
 }
 
+// removes a users' subscription based on the player id in the request body
 function removeSubscription (request) {
   let response = db.collection('users').doc(request.uid).collection('subscriptions').doc(request.playerId).delete().then(function () {
     return generateResponse(true, 'Subscription successfully removed!')
@@ -140,6 +146,7 @@ function subscriptions (id) {
   return response
 }
 
+// takes in a user id and returns a list of team ids that belong that users' subscriptions
 function teamIds (id) {
   var ids = []
   let response = db.collection('users').doc(id).collection('subscriptions').get().then(function (querySnapshot) {
@@ -154,6 +161,7 @@ function teamIds (id) {
   return response
 }
 
+// serializes response generation for routes that return a true/false response flag
 function generateResponse (result, message) {
   let response = {
     result: result,
