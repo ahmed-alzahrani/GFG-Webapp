@@ -9,9 +9,9 @@
 // let charitiesService = require('./services/charitiesService.js')
 
 // Directories
-let playerDirectory = './Resources/Update/Players'
-let competitionDirectory = './Resources/Update/Competitions'
-let teamServiceDirectory = './Resources/Update/Teams'
+// let playerDirectory = './Resources/Update/Players'
+// let competitionDirectory = './Resources/Update/Competitions'
+// let teamServiceDirectory = './Resources/Update/Teams'
 
 // Would be interesting to see how we will update the data after we check the values
 
@@ -26,8 +26,6 @@ module.exports =
 function CheckLiveMatches () {
   // Gotta see how the api calls are made
   console.log('checking live matches')
-
-
 }
 
 // Check for updating teams occurs once a day
