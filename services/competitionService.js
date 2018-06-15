@@ -6,11 +6,9 @@ exports.populateCompetitions = function () {
   createCompetitions()
 }
 
-// getCompetitions queries the service for the list of competitions we have access to
-// it then passes the competitions off to getStandings()
+// gets the list of competitions we have access to throug the live data feed
 function createCompetitions () {
   let url = config.baseUrl + 'competitions?Authorization=' + config.apiKey
-  // request-promise to execute the writing of JSON after the promise of querying for competitions
   rp({
     'method': 'GET',
     'uri': url,
@@ -28,14 +26,11 @@ function createCompetitions () {
   })
 }
 
-// takes in the list of competitions we have access to
-// uses this to query the service
+// write standing data from each league to /Resources/Standings if the league is in our config.competitionIds
 function createStandings (response) {
   let ids = config.competitionIds
   var store = require('json-fs-store')('./Resources/Standings')
 
-  // loop through the competitions and ensure they exist in the configs pre-defined list
-  // this filters out cup competitions both domestic and european, to avoid duplicating players
   for (var i = 0; i < response.length; i++) {
     let competition = response[i]
     if (ids.indexOf(competition.id) > -1) {
@@ -54,8 +49,6 @@ function createStandings (response) {
         store.add(obj, function (err) {
           if (err) throw err
         })
-        // we've populated the Standings directory with the standings of this given competition
-        console.log('finished populating the standings for.... ' + competition.name)
       })
     }
   }

@@ -87,3 +87,9 @@ __14/06/18__
 - Also added util function to sort matches by id (and thus, date) once they have been gathered from the Football api
 
 - added getTeamIds and getMatches functionality in adminService to perform the two steps involved in querying for a user's matches, gathering the team Ids of the players subscribed to, and then querying with those for match data
+
+__15/06/18__
+
+- fixed minor linter errors
+
+- added commenting into all files of codebase

@@ -13,6 +13,7 @@ exports.players = function () {
   return obj.players
 }
 
+// fetches and returns detailed data on a specific player at a url based on that player's id
 exports.player = async function (playerId) {
   let url = config.baseUrl + 'player/' + playerId + '?Authorization=' + config.apiKey
   let response = await fetch(url)
@@ -20,9 +21,8 @@ exports.player = async function (playerId) {
   return data
 }
 
+// loops through the squads held in /Resources/Teams and writes info for each player at /Resources/Players
 function createPlayers () {
-  logBeginning()
-
   let playerArr = []
   teamStore.list(function (err, objects) {
     if (err) throw err
@@ -44,11 +44,16 @@ function createPlayers () {
       }
     }
     // send the player array to be written in JSON in the proper Resource folder
-    writePlayers(playerArr)
+    let obj = {
+      id: 'players',
+      players: playerArr
+    }
+    playerStore.add(obj, function (err) { if (err) throw err })
     console.log('number of players is... ' + playerArr.length)
   })
 }
 
+// maps positions as they arrive from the live feed to how we want them returned to the client
 function adjustPosition (player) {
   switch (player.position) {
     case 'G':
@@ -67,20 +72,4 @@ function adjustPosition (player) {
       player.position = 'Attacker'
       break
   }
-}
-
-function writePlayers (playerArr) {
-  let obj = {
-    id: 'players',
-    players: playerArr
-  }
-  playerStore.add(obj, function (err) { if (err) throw err })
-}
-
-function logBeginning () {
-  console.log()
-  console.log()
-  console.log('attemptin to recover the files from the Teams directory in resources')
-  console.log()
-  console.log()
 }
