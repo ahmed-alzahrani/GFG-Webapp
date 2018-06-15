@@ -3,15 +3,9 @@
     Description: This is the file that is going to include the functions that will be scheduled to be called by the server
 */
 
-// let playerService = require('./services/playerService.js')
-// let competitionService = require('./services/competitionService.js')
-// let teamService = require('./services/teamService.js')
-// let charitiesService = require('./services/charitiesService.js')
-
-// Directories
-// let playerDirectory = './Resources/Update/Players'
-// let competitionDirectory = './Resources/Update/Competitions'
-// let teamServiceDirectory = './Resources/Update/Teams'
+let playerService = require('./services/playerService.js')
+let competitionService = require('./services/competitionService.js')
+let teamService = require('./services/teamService.js')
 
 // Would be interesting to see how we will update the data after we check the values
 
@@ -30,6 +24,8 @@ function CheckLiveMatches () {
 
 // Check for updating teams occurs once a day
 function CheckTeamDatabase () {
-  // Gotta make the api calls
   console.log('checking team database')
+  competitionService.populateCompetitions() // Repopulate competitions
+  playerService.populatePlayers() // Repopulate players
+  teamService.populateTeams() // Repopulate teams
 }
