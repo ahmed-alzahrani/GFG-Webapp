@@ -8,8 +8,10 @@ exports.populatePlayers = function () {
   createPlayers()
 }
 
-exports.players = function () {
-  var obj = JSON.parse(fs.readFileSync('Resources/Players/players.json', 'utf8'))
+// Might need to make changes here to receive directories
+exports.players = function (directory) {
+  // var obj = JSON.parse(fs.readFileSync('Resources/Players/players.json', 'utf8'))
+  var obj = JSON.parse(fs.readFileSync(directory, 'utf8'))
   return obj.players
 }
 

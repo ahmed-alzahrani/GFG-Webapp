@@ -1,6 +1,7 @@
 var admin = require('firebase-admin')
-let config = require('../config/config.js')
-var serviceAccount = require(config.serviceAccount)
+// let config = require('../config/config.js')
+let serviceAccount = require('../config/serviceAccount.json')
+// var serviceAccount = require(config.serviceAccount)
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: 'https://goals-for-good.firebaseio.com'

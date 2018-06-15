@@ -9,6 +9,9 @@ let charitiesService = require('./services/charitiesService.js')
 let schedule = require('node-schedule') // This will be the scheduler that sets up function calls at certain time intervals
 let scheduleService = require('./services/scheduleService.js') // This holds the functions that will be scheduled by the scheduler
 
+// Directories
+let playerDirectory = ''
+
 app.use(bodyParser.json())
 
 // set up our routes
@@ -16,8 +19,9 @@ app.get('/', function (req, res) {
   res.send('hello world')
 })
 
+// Return the player json information
 app.get('/players', function (req, res) {
-  res.send(playerService.players())
+  res.send(playerService.players('Resources/Players/players.json'))
 })
 
 app.get('/player/:playerId', function (req, res) {
@@ -60,6 +64,6 @@ app.listen(8080, function () {
   var rule = new schedule.RecurrenceRule()
   rule.hour = 2 // Should run at 2 am all the time
   rule.minute = 0 // We have to set minute to 0 or this will run every minute at 2 am
-  let j = schedule.scheduleJob(rule , scheduleService.checkTeams) // Schedules the check for team values in the database
-  let j1 = schedule.scheduleJob('*/5 * * * *' , scheduleService.checkLiveMatches) // Schedules the check for checking for live matches
+  let j = schedule.scheduleJob(rule, scheduleService.checkTeams) // Schedules the check for team values in the database
+  let j1 = schedule.scheduleJob('*/5 * * * *', scheduleService.checkLiveMatches) // Schedules the check for checking for live matches
 })
