@@ -18,7 +18,7 @@ app.get('/', function (req, res) {
 
 // Return the player json information
 app.get('/players', function (req, res) {
-  res.send(playerService.players('Resources/Players/players.json'))
+  res.send(playerService.players()
 })
 
 app.get('/player/:playerId', function (req, res) {
