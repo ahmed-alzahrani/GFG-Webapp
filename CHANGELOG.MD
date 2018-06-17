@@ -93,3 +93,8 @@ __15/06/18__
 - fixed minor linter errors
 
 - added commenting into all files of codebase
+
+
+__16/06/18__
+
+- Added a route at `/playerMatches/:teamId`in order to get the matches being played in the next month for a specific player using that player's team id

@@ -44,6 +44,12 @@ app.get('/matches/:userId', function (req, res) {
   })
 })
 
+app.get('/playerMatches/:teamId', function (req, res) {
+  adminService.getMatches([req.params.teamId]).then(function (matches) {
+    res.send(matches)
+  })
+})
+
 app.post('/addUser', function (req, res) {
   adminService.addUser(req.body).then(function (response) {
     res.send(response)
