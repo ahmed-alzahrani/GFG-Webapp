@@ -1,5 +1,4 @@
 let config = require('../config/config.js')
-// let rp = require('request-promise')
 let store = require('json-fs-store')('./Resources/Competitions')
 let fetch = require('node-fetch')
 
