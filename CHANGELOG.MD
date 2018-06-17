@@ -54,4 +54,47 @@ __08/06/18__
 
 - Added Setup instructions to README in it's place
 
-- Moved Service Account path from actual instantiaton of admin in adminService to config to generalize the repo
+- Moved Service Account path from actual instantiating of admin in adminService to config to generalize the repo
+
+__12/06/18__
+
+- Added Route for /subscriptions/:userId to return a user their list of subscriptions
+
+- Added npm quickstart command to just run `node app.js` and launch the server without going through the JSON building process as is with `npm start`
+
+- Flattened subscriptions response to put id and data on the root level together
+
+__13/06/18__
+
+- Fixed linter errors in util
+
+- Added liveTestMatches to .gitignore to allow for population of test JSON info. With this, we can test the sever's ability to query for, and act upon, live match and goal data at will without relying on waiting for live matches to resume in August.
+
+- Changed route that adds subscriptions to a user to include the player's team ID
+
+- Began adding /matches/:userId route that will return all matches to be played by player's the user is subscribed to for the following month
+
+- Included teamName in subscription object
+
+__14/06/18__
+
+- Added `moment` dependency for gathering dates to be used in querying for matches.
+
+- finished route for GET request on /matches/:userId that returns JSON response array of all matches for players that user is subscribed to that will be played in the next month
+
+- added util functions for generating a URL to query matches with, which includes functionality for getting date strings for the current date, and one month in the future formatted as `dd.mm.yyyy`.
+
+- Also added util function to sort matches by id (and thus, date) once they have been gathered from the Football api
+
+- added getTeamIds and getMatches functionality in adminService to perform the two steps involved in querying for a user's matches, gathering the team Ids of the players subscribed to, and then querying with those for match data
+
+__15/06/18__
+
+- fixed minor linter errors
+
+- added commenting into all files of codebase
+
+
+__16/06/18__
+
+- Added a route at `/playerMatches/:teamId`in order to get the matches being played in the next month for a specific player using that player's team id

@@ -31,6 +31,26 @@ app.get('/charities', function (req, res) {
   res.send(charitiesService.charities())
 })
 
+app.get('/subscriptions/:userId', function (req, res) {
+  adminService.getSubscriptions(req.params.userId).then(function (response) {
+    res.send(response)
+  })
+})
+
+app.get('/matches/:userId', function (req, res) {
+  adminService.getTeamIds(req.params.userId).then(function (ids) {
+    adminService.getMatches(ids).then(function (matches) {
+      res.send(matches)
+    })
+  })
+})
+
+app.get('/playerMatches/:teamId', function (req, res) {
+  adminService.getMatches([req.params.teamId]).then(function (matches) {
+    res.send(matches)
+  })
+})
+
 app.post('/addUser', function (req, res) {
   adminService.addUser(req.body).then(function (response) {
     res.send(response)
@@ -61,9 +81,6 @@ app.listen(8080, function () {
   var rule = new schedule.RecurrenceRule()
   rule.hour = 2 // Should run at 2 am all the time
   rule.minute = 0 // We have to set minute to 0 or this will run every minute at 2 am
-  // let j = schedule.scheduleJob(rule, scheduleService.checkTeams) // Schedules the check for team values in the database
-  // let j1 = schedule.scheduleJob('*/5 * * * *', scheduleService.checkLiveMatches) // Schedules the check for checking for live matches
-
   schedule.scheduleJob(rule, scheduleService.checkTeams) // Schedules the check for team values in the database
   schedule.scheduleJob('*/5 * * * *', scheduleService.checkLiveMatches) // Schedules the check for checking for live matches
 })
