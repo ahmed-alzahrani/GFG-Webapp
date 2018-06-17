@@ -3,9 +3,9 @@
     Description: This is the file that is going to include the functions that will be scheduled to be called by the server
 */
 
-let playerService = require('./services/playerService.js')
-let competitionService = require('./services/competitionService.js')
-let teamService = require('./services/teamService.js')
+let playerService = require('../services/playerService.js')
+let competitionService = require('../services/competitionService.js')
+let teamService = require('../services/teamService.js')
 
 // Would be interesting to see how we will update the data after we check the values
 

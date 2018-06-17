@@ -40,11 +40,9 @@ function createTeams () {
             await teamStore.add(obj, function (err) {
               if (err) throw err
             })
-
-              // write the info about that team we receive to /Resources/Teams
-              teamStore.add(obj, function (err) {
-                if (err) throw err
-              })
+            // write the info about that team we receive to /Resources/Teams
+            teamStore.add(obj, function (err) {
+              if (err) throw err
             })
           }
         })
