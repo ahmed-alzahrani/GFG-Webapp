@@ -97,4 +97,8 @@ __15/06/18__
 
 __16/06/18__
 
-- Added a route at `/playerMatches/:teamId`in order to get the matches being played in the next month for a specific player using that player's team id
+- Added a route at `/playerMatches/:teamId` in order to get the matches being played in the next month for a specific player using that player's team id
+
+__17/06/18__
+
+- Added a route at `/updateSubscription` in order to allow users to change the charity associated with a subscription
