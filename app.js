@@ -69,6 +69,12 @@ app.post('/subscribe', function (req, res) {
   })
 })
 
+app.post('/updateSubscription', function (req, res) {
+  adminService.updateSubscription(req.body).then(function (response) {
+    res.send(response)
+  })
+})
+
 app.post('/unsubscribe', function (req, res) {
   adminService.unsubscribe(req.body).then(function (response) {
     res.send(response)

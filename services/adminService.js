@@ -37,6 +37,11 @@ exports.getSubscriptions = async function (id) {
   return response
 }
 
+exports.updateSubscription = async function (request) {
+  let response = await updateSub(request)
+  return response
+}
+
 exports.getTeamIds = async function (id) {
   let ids = await teamIds(id)
   return ids
@@ -115,6 +120,19 @@ function addSubscription (request) {
 function removeSubscription (request) {
   let response = db.collection('users').doc(request.uid).collection('subscriptions').doc(request.playerId).delete().then(function () {
     return generateResponse(true, 'Subscription successfully removed!')
+  }).catch(function (error) {
+    return generateResponse(false, 'Error removing document: ' + error)
+  })
+  return response
+}
+
+function updateSub (request) {
+  let obj = {
+    charity: request.charityName,
+    charityId: request.charityId
+  }
+  let response = db.collection('users').doc(request.uid).collection('subscriptions').doc(request.playerId).set(obj, {merge: true}).then(function () {
+    return generateResponse(true, 'Subscription successfully ')
   }).catch(function (error) {
     return generateResponse(false, 'Error removing document: ' + error)
   })
