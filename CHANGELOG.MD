@@ -102,3 +102,7 @@ __16/06/18__
 __17/06/18__
 
 - Added a route at `/updateSubscription` in order to allow users to change the charity associated with a subscription
+
+__18/06/18__
+
+- Finished implementation of update subscription to update the charity and charityId fiel

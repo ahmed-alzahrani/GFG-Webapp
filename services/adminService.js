@@ -131,7 +131,7 @@ function updateSub (request) {
     charity: request.charityName,
     charityId: request.charityId
   }
-  let response = db.collection('users').doc(request.uid).collection('subscriptions').doc(request.playerId).set(obj, {merge: true}).then(function () {
+  let response = db.collection('users').doc(request.uid).collection('subscriptions').doc(request.playerId).update(obj).then(function () {
     return generateResponse(true, 'Subscription successfully ')
   }).catch(function (error) {
     return generateResponse(false, 'Error removing document: ' + error)
