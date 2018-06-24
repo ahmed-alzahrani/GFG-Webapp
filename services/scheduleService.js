@@ -132,10 +132,16 @@ function UpdateLiveMatches (data) {
 // Check for actual new events that have occurred in the game
 function UpdateEvents (data) {
   // Check for new events
-  var sizeDifference = data.length - liveMatches.length
   var events = []
-  for (var i = 0; i < sizeDifference; i++) {
-    events.push(data[liveMatches.length + i].events)
+  var sizeDifference = 0
+  // I am using the data array if something breaks then my algo for removing old matches is buggy
+  for (var i = 0; i < data.lengh; i++) {
+    sizeDifference = data[i].events.length - liveMatches[i].events.length // This should give us the size difference in event array size
+    events.push(data[i])  // Store the live game info to be able to parse through
+    events[i].events = [] // Reset events array to get most latest events
+    for (var j = 0; j < sizeDifference; j++) {
+      events[i].events.push(data[i].events[liveMatches.events.length + j]) // Add the new events to the array
+    }
   }
   return events
 }
