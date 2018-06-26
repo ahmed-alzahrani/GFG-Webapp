@@ -144,8 +144,7 @@ function UpdateEvents (data) {
     if (liveMatches[i] === undefined) {
       offset = 0
       sizeDifference = data[i].events.length
-    }
-    else {
+    } else {
       offset = liveMatches[i].events.length
       sizeDifference = data[i].events.length - liveMatches[i].events.length // This should give us the size difference in event array size
     }
