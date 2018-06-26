@@ -79,6 +79,7 @@ async function CheckLiveMatches () {
   console.log('-------------------')
   console.log(res)
   HandleLiveMatches(res) // Handles the live matches result
+  console.log('live matches updated')
 }
 
 // Check for updating teams occurs once a day
@@ -111,10 +112,11 @@ function ParseLiveMatchResult (data) {
   // Go through the info and update the results
   UpdateLiveMatches(data) // Update live matches remove ones that aren't live anymore
   let newEvents = UpdateEvents(data)  // Update live match events
-  console.log(newEvents)
+  ParseEvents(newEvents)  // Send info about certain events
 }
 
 // Goes through live matches and removes ones that aren't
+// THIS NEEDS TO BE FIXED BY FLIPPING DATA AND LIVEMATCHES
 function UpdateLiveMatches (data) {
   // Check for updating live matches
   for (var i = 0; i < liveMatches.length; i++) {
@@ -134,14 +136,40 @@ function UpdateEvents (data) {
   // Check for new events
   var events = []
   var sizeDifference = 0
-  // I am using the data array if something breaks then my algo for removing old matches is buggy
-  for (var i = 0; i < data.lengh; i++) {
-    sizeDifference = data[i].events.length - liveMatches[i].events.length // This should give us the size difference in event array size
-    events.push(data[i])  // Store the live game info to be able to parse through
+  var offset = 0
+
+  for (var i = 0; i < data.length; i++) {
+    events.push(JSON.parse(JSON.stringify(data[i])))  // Stupid way of creating an actual json clone
     events[i].events = [] // Reset events array to get most latest events
+    if (liveMatches[i] === undefined) {
+      offset = 0
+      sizeDifference = data[i].events.length
+    }
+    else {
+      offset = liveMatches[i].events.length
+      sizeDifference = data[i].events.length - liveMatches[i].events.length // This should give us the size difference in event array size
+    }
     for (var j = 0; j < sizeDifference; j++) {
-      events[i].events.push(data[i].events[liveMatches.events.length + j]) // Add the new events to the array
+      events[i].events.push(data[i].events[offset + j]) // Add the new events to the array
     }
   }
   return events
+}
+
+// Parse through the new events and notify the user or smthg like that
+function ParseEvents (data) {
+  for (var i = 0; i < data.length; i++) {
+    if (data[i].events === undefined) continue
+    for (var j = 0; j < data[i].events.length; j++) {
+      switch (data[i].events[j].type) {
+        case 'goal': {
+          console.log('a goal has been scored here')  // We have a goal here (generally there will be one only but can still be handled if more i think)
+          break
+        }
+        default: {
+          console.log('error occurred here')
+        }
+      }
+    }
+  }
 }
