@@ -9,8 +9,9 @@
     "teamBuild": "node prestart/builds/teamBuild.js",
     "playerBuild": "node prestart/builds/playerBuild.js",
     "charitiesBuild": "node prestart/builds/charitiesBuild.js",
+    "matchesBuild": "node prestart/builds/matchesBuild.js",
     "start": "node app.js",
-    "prestart": "npm run competitionBuild && npm run teamBuild && npm run playerBuild && npm run charitiesBuild",
+    "prestart": "npm run competitionBuild && npm run teamBuild && npm run playerBuild && npm run charitiesBuild && npm run matchesBuild",
     "restart": "npm run clean && npm start",
     "quickstart": "node app.js",
     "test": "test"

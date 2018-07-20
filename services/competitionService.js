@@ -29,7 +29,6 @@ async function createCompetitions () {
   return data
 }
 
-
 // takes in the list of competitions we have access to
 // uses this to query the service
 async function createStandings (response) {
@@ -41,7 +40,6 @@ async function createStandings (response) {
     if (ids.indexOf(competition.id) > -1) {
       // util.adjustCompName(competition)
       let url = config.baseUrl + 'standings/' + competition.id + '?Authorization=' + config.apiKey
-      // Make the api requests
       let res = await fetch(url)
       let data = await res.json()
 

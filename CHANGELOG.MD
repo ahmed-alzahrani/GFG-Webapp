@@ -105,4 +105,19 @@ __17/06/18__
 
 __18/06/18__
 
-- Finished implementation of update subscription to update the charity and charityId fiel
+- Finished implementation of update subscription to update the charity and charityId field
+
+__20/07/18__
+
+- Added scheduled job to re-query and re-populate stored team / competition / player info every day at 2 am (this will have to be tweaked for game days to update right after live matches)
+
+- Added scheduled job to run every minute and check for live goals by adding live match info to Resources as it becomes available. Every minute it queries the Football API feed for live match info, and either:
+
+      1. There is no live match information available, in which case the job resets its matches array to empty in the relevant JSON resource
+
+      2. There is live matches available, in which case the following process occurs:
+          a) Trim any matches that were being held as live, but are now no longer live in the new call
+          b) Add any new matches that may not have been previously held as live to the live matches in the JSON resource
+          c) Update the events to reflect any new goal events in the live matches being held
+
+(Next I need to add the adminService logic that is triggered when a goal is scored, should loop through the user DB and query to see if a user is subscribed to the scorer and contact them / update their stats in the firebase DB)
