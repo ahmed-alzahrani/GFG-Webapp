@@ -127,3 +127,5 @@ __22/07/18__
 - Added handleGoal function in AdminService that can now iterate over the userDB and determine whether each user is subscribed to the playerId passed in as the goal scorer by scheduleService whenever the live match info includes a previously untracked goal
 
 - tweaked storage of live match events to include the playerId and current match result ensuing after a goal
+
+- Added updateStats() func to adminService that will update the users stats info in the Firestore DB to add in the most recent goal that the user has had occur

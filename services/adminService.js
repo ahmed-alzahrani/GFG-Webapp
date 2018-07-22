@@ -70,15 +70,13 @@ exports.getMatches = async function (ids) {
 exports.handleGoal = async function (playerId) {
   var ref = db.collection('users')
   ref.get().then(snapshot => {
-    snapshot.forEach(doc => {
-      // console.log(doc.id, '=>', doc.data())
-      let userDoc = doc
-      var subscriptionRef = db.collection('users').doc(doc.id).collection('subscriptions').doc(playerId)
-      subscriptionRef.get().then(function (doc) {
-        if (doc.exists) {
-          console.log('the user with the id ... ', userDoc.id, ' is SUBSCRIBED to the goal-scorer with the id ... ', playerId)
+    snapshot.forEach(user => {
+      var subscriptionRef = db.collection('users').doc(user.id).collection('subscriptions').doc(playerId)
+      subscriptionRef.get().then(function (subscription) {
+        if (subscription.exists) {
+          let stats = updateStats(user.data().stats, subscription.data(), playerId)
+          ref.doc(user.id).update({ stats: stats })
         } else {
-          console.log('the user with the id ... ', userDoc.id, ' is NOT subscribed to the goal-scorer with the id ... ', playerId)
         }
       })
     })
@@ -88,11 +86,67 @@ exports.handleGoal = async function (playerId) {
     })
 }
 
+function updateStats (stats, subscription, playerId) {
+  // time stamp of goal being added
+  let timestamp = new Date()
+  let timeString = timestamp.toString()
+  // extract existing stat info to update with
+  let charity = subscription.charityId
+  var goals = stats.goals + 1
+  var allGoals = stats.allGoals
+  var charities = stats.charities
+  var scorers = stats.scorers
+
+  // add the new goal into the allGoals array
+  allGoals.push({
+    charityName: subscription.charity,
+    charity: charity,
+    player: playerId,
+    playerName: subscription.name,
+    teamName: subscription.teamName,
+    team: subscription.team,
+    time: timeString
+  })
+
+  // update charities / scorers with the new goal information
+  if (charities.hasOwnProperty(charity)) {
+    charities[charity].count += 1
+  } else {
+    charities[charity] = {
+      name: subscription.charity,
+      count: 1
+    }
+  }
+
+  if (scorers.hasOwnProperty(playerId)) {
+    scorers[playerId].count += 1
+  } else {
+    scorers[playerId] = {
+      name: subscription.name,
+      count: 1
+    }
+  }
+
+  // return the obj
+  return {
+    goals: goals,
+    allGoals: allGoals,
+    charities: charities,
+    scorers: scorers
+  }
+}
 // writes a new user object into the Firebase Firestore NoSQL database based on the auth user created
 function writeUser (user) {
   let obj = {
     name: '',
-    email: user.email
+    email: user.email,
+    stats:
+      {
+        goals: 0,
+        allGoals: [],
+        scorers: {},
+        charities: {}
+      }
   }
   let response = db.collection('users').doc(user.uid).set(obj).then(function () {
     return generateResponse(true, 'User document successfully written!')
