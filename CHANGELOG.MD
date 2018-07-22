@@ -121,3 +121,9 @@ __20/07/18__
           c) Update the events to reflect any new goal events in the live matches being held
 
 (Next I need to add the adminService logic that is triggered when a goal is scored, should loop through the user DB and query to see if a user is subscribed to the scorer and contact them / update their stats in the firebase DB)
+
+__22/07/18__
+
+- Added handleGoal function in AdminService that can now iterate over the userDB and determine whether each user is subscribed to the playerId passed in as the goal scorer by scheduleService whenever the live match info includes a previously untracked goal
+
+- tweaked storage of live match events to include the playerId and current match result ensuing after a goal

@@ -67,6 +67,27 @@ exports.getMatches = async function (ids) {
   return matches.sort(util.compareMatches)
 }
 
+exports.handleGoal = async function (playerId) {
+  var ref = db.collection('users')
+  ref.get().then(snapshot => {
+    snapshot.forEach(doc => {
+      // console.log(doc.id, '=>', doc.data())
+      let userDoc = doc
+      var subscriptionRef = db.collection('users').doc(doc.id).collection('subscriptions').doc(playerId)
+      subscriptionRef.get().then(function (doc) {
+        if (doc.exists) {
+          console.log('the user with the id ... ', userDoc.id, ' is SUBSCRIBED to the goal-scorer with the id ... ', playerId)
+        } else {
+          console.log('the user with the id ... ', userDoc.id, ' is NOT subscribed to the goal-scorer with the id ... ', playerId)
+        }
+      })
+    })
+  })
+    .catch(err => {
+      console.log('Error getting all users', err)
+    })
+}
+
 // writes a new user object into the Firebase Firestore NoSQL database based on the auth user created
 function writeUser (user) {
   let obj = {

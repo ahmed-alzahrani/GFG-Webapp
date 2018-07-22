@@ -3,10 +3,11 @@ let config = require('../config/config.js')
 let playerService = require('../services/playerService.js')
 let competitionService = require('../services/competitionService.js')
 let teamService = require('../services/teamService.js')
+let adminService = require('../services/adminService.js')
 let fs = require('fs')
 let matchesStore = require('json-fs-store')('./Resources/Matches')
-let url = config.baseUrl + 'matches?Authorization=' + config.apiKey
-// let url = 'http://api.football-api.com/2.0/matches/?team_id=9259&from_date=21.06.2017&to_date=21.09.2017&Authorization=' + config.apiKey
+// let url = config.baseUrl + 'matches?Authorization=' + config.apiKey
+let url = 'http://api.football-api.com/2.0/matches/?team_id=9259&from_date=21.06.2017&to_date=21.09.2017&Authorization=' + config.apiKey
 
 // Store pointers to the functions of the js file
 module.exports =
@@ -154,8 +155,8 @@ function ParseEvents (storedEvents, events) {
     }
     if (!exists && events[i].type === 'goal') {
       storedEvents.push(trimEvent(events[i]))
+      adminService.handleGoal(events[i].player_id)
       // a new goal exists! send it to the event and trigger the call for goals
-      // adminService.executeGoal(events[i].player, events[i].player_id)
     }
   }
   return storedEvents
@@ -182,7 +183,8 @@ function trimEvent (matchEvent) {
     minute: matchEvent.minute,
     team: matchEvent.team,
     player: matchEvent.player,
-    playerId: matchEvent.playerId
+    playerId: matchEvent.player_id,
+    result: matchEvent.result
   }
 
   return obj

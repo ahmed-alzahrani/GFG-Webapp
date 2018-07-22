@@ -88,5 +88,5 @@ app.listen(8080, function () {
   rule.hour = 2 // Should run at 2 am all the time
   rule.minute = 0 // We have to set minute to 0 or this will run every minute at 2 am
   schedule.scheduleJob(rule, scheduleService.checkTeams) // Schedules the check for team values in the database
-  schedule.scheduleJob('*/1 * * * *', scheduleService.checkLiveMatches) // Schedules the check for checking for live matches
+  schedule.scheduleJob('*/5 * * * *', scheduleService.checkLiveMatches) // Schedules the check for checking for live matches
 })
