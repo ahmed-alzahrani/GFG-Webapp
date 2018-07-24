@@ -48,13 +48,11 @@ app.get('/playerMatches/:teamId', function (req, res) {
   })
 })
 
-/*
 app.get('/stats/:uid', function (req, res) {
   adminService.getStats(req.params.uid).then(function (stats) {
     res.send(stats)
   })
 })
-*/
 
 app.post('/addUser', function (req, res) {
   adminService.addUser(req.body).then(function (response) {

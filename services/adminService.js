@@ -67,12 +67,10 @@ exports.getMatches = async function (ids) {
   return matches.sort(util.compareMatches)
 }
 
-/*
 exports.getStats = async function (uid) {
   let response = await stats(uid)
   return response
 }
-*/
 
 exports.handleGoal = async function (playerId) {
   var ref = db.collection('users')
@@ -278,6 +276,18 @@ function teamIds (id) {
   }).catch(function (error) {
     console.log(error)
     return []
+  })
+  return response
+}
+
+function stats (uid) {
+  var userRef = db.collection('users').doc(uid)
+  let response = userRef.get().then(function (doc) {
+    if (doc.exists) {
+      return doc.data().stats
+    } else {
+      return generateResponse(false, 'User does not exist')
+    }
   })
   return response
 }

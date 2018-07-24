@@ -135,3 +135,5 @@ __23/07/18__
 - Reverted storage of scorers and charities to be arrays instead of nested objects
 
 - Added calculation of topScorer and topCharity on every new goal the user's subscriptions score
+
+- Added route to return a specific user's stats at /stats/:userId
