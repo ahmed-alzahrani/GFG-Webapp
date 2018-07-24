@@ -2,6 +2,7 @@ var admin = require('firebase-admin')
 let fetch = require('node-fetch')
 let config = require('../config/config.js')
 let util = require('../util/util.js')
+let mailService = require('../services/mailService.js')
 
 // initialize Firebase admin SDK
 
@@ -81,6 +82,7 @@ exports.handleGoal = async function (playerId) {
         if (subscription.exists) {
           let stats = updateStats(user.data().stats, subscription.data(), playerId)
           ref.doc(user.id).update({ stats: stats })
+          mailService.sendGoalEmail(user.data().email, subscription.data().charity, subscription.data().name)
           // create a new service, mailService? that uses nodeMailer to email the user, informing them that they have a new goal scored
         } else {
         }

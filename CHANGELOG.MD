@@ -137,3 +137,7 @@ __23/07/18__
 - Added calculation of topScorer and topCharity on every new goal the user's subscriptions score
 
 - Added route to return a specific user's stats at /stats/:userId
+
+- Added generic e-mail trigger from gmail account to notify user of a triggered goal
+
+- Added to clean.js script so npm restart resets each user's stats but NOT subscriptions upon call to npm restart
