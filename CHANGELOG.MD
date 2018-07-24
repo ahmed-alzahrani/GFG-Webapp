@@ -129,3 +129,9 @@ __22/07/18__
 - tweaked storage of live match events to include the playerId and current match result ensuing after a goal
 
 - Added updateStats() func to adminService that will update the users stats info in the Firestore DB to add in the most recent goal that the user has had occur
+
+__23/07/18__
+
+- Reverted storage of scorers and charities to be arrays instead of nested objects
+
+- Added calculation of topScorer and topCharity on every new goal the user's subscriptions score

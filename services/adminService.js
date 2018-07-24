@@ -1,6 +1,6 @@
 var admin = require('firebase-admin')
-let config = require('../config/config.js')
 let fetch = require('node-fetch')
+let config = require('../config/config.js')
 let util = require('../util/util.js')
 
 // initialize Firebase admin SDK
@@ -67,6 +67,13 @@ exports.getMatches = async function (ids) {
   return matches.sort(util.compareMatches)
 }
 
+/*
+exports.getStats = async function (uid) {
+  let response = await stats(uid)
+  return response
+}
+*/
+
 exports.handleGoal = async function (playerId) {
   var ref = db.collection('users')
   ref.get().then(snapshot => {
@@ -76,6 +83,7 @@ exports.handleGoal = async function (playerId) {
         if (subscription.exists) {
           let stats = updateStats(user.data().stats, subscription.data(), playerId)
           ref.doc(user.id).update({ stats: stats })
+          // create a new service, mailService? that uses nodeMailer to email the user, informing them that they have a new goal scored
         } else {
         }
       })
@@ -109,30 +117,49 @@ function updateStats (stats, subscription, playerId) {
   })
 
   // update charities / scorers with the new goal information
-  if (charities.hasOwnProperty(charity)) {
-    charities[charity].count += 1
-  } else {
-    charities[charity] = {
+  var exists = false
+  for (var i = 0; i < charities.length; i++) {
+    if (charities[i].id === charity) {
+      charities[i].count += 1
+      exists = true
+      break
+    }
+  }
+  if (!exists) {
+    charities.push({
+      id: charity,
       name: subscription.charity,
       count: 1
+    })
+  }
+
+  exists = false
+  for (i = 0; i < scorers.length; i++) {
+    if (scorers[i].id === playerId) {
+      scorers[i].count += 1
+      exists = true
+      break
     }
   }
 
-  if (scorers.hasOwnProperty(playerId)) {
-    scorers[playerId].count += 1
-  } else {
-    scorers[playerId] = {
+  if (!exists) {
+    scorers.push({
+      id: playerId,
       name: subscription.name,
       count: 1
-    }
+    })
   }
+  charities.sort(findTop)
+  scorers.sort(findTop)
 
   // return the obj
   return {
     goals: goals,
     allGoals: allGoals,
     charities: charities,
-    scorers: scorers
+    scorers: scorers,
+    topScorer: scorers[0].name,
+    topCharity: charities[0].name
   }
 }
 // writes a new user object into the Firebase Firestore NoSQL database based on the auth user created
@@ -144,8 +171,10 @@ function writeUser (user) {
       {
         goals: 0,
         allGoals: [],
-        scorers: {},
-        charities: {}
+        scorers: [],
+        charities: [],
+        topScorer: '',
+        topCharity: ''
       }
   }
   let response = db.collection('users').doc(user.uid).set(obj).then(function () {
@@ -261,4 +290,12 @@ function generateResponse (result, message) {
   }
   console.log(response)
   return response
+}
+
+function findTop (a, b) {
+  if (a.count === b.count) {
+    return a.name.localeCompare(b.name)
+  } else {
+    return a.count - b.count
+  }
 }

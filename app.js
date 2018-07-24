@@ -12,9 +12,6 @@ let scheduleService = require('./services/scheduleService.js') // This holds the
 app.use(bodyParser.json())
 
 // set up our routes
-app.get('/', function (req, res) {
-  res.send('hello world')
-})
 
 // Return the player json information
 app.get('/players', function (req, res) {
@@ -50,6 +47,14 @@ app.get('/playerMatches/:teamId', function (req, res) {
     res.send(matches)
   })
 })
+
+/*
+app.get('/stats/:uid', function (req, res) {
+  adminService.getStats(req.params.uid).then(function (stats) {
+    res.send(stats)
+  })
+})
+*/
 
 app.post('/addUser', function (req, res) {
   adminService.addUser(req.body).then(function (response) {

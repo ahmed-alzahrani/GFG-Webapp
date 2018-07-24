@@ -171,8 +171,6 @@ function trimMatch (match) {
     away: match.visitorteam_name,
     events: []
   }
-  // console.log('I just trimmed a match... let me look at what that looks like')
-  // console.log(obj)
   return obj
 }
 
