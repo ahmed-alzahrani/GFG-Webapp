@@ -26,7 +26,6 @@ async function createCompetitions () {
       createStandings(data) // After all the data is there create the standings
     }
   })
-  return data
 }
 
 // takes in the list of competitions we have access to

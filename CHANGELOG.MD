@@ -141,3 +141,13 @@ __23/07/18__
 - Added generic e-mail trigger from gmail account to notify user of a triggered goal
 
 - Added to clean.js script so npm restart resets each user's stats but NOT subscriptions upon call to npm restart
+
+__24/07/18__
+
+- Encapsulated clean.js JSON/Stats cleanup in their own functions which are then called, instead of just executed at file scope
+
+- Removed deprecated packages, including mocha/chai for testing, added jest for testing and including 'it' as a global in package.json to avoid js-standard linter errors from defining tests
+
+- made a tests directory and added one empty test that is blank (passes)
+
+- changed npm test to execute jest across the project
