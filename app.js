@@ -54,6 +54,7 @@ app.get('/stats/:uid', function (req, res) {
   })
 })
 
+// adds a user to the Firebase Firestore in order to track their subscriptions and goals
 app.post('/addUser', function (req, res) {
   adminService.addUser(req.body).then(function (response) {
     res.send(response)

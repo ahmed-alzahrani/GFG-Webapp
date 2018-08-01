@@ -6,18 +6,11 @@ let teamService = require('../services/teamService.js')
 let adminService = require('../services/adminService.js')
 let fs = require('fs')
 let matchesStore = require('json-fs-store')('./Resources/Matches')
-// let url = config.baseUrl + 'matches?Authorization=' + config.apiKey
-let url = 'http://api.football-api.com/2.0/matches/?team_id=9259&from_date=21.06.2017&to_date=21.09.2017&Authorization=' + config.apiKey
-
-// Store pointers to the functions of the js file
-module.exports =
-{
-  checkLiveMatches: CheckLiveMatches,
-  checkTeams: CheckTeams
-}
+// let url = config.baseUrl + 'matches?Authorization=' + config.apiKey    <--- URL for actual live matches
+let url = 'http://api.football-api.com/2.0/matches/?team_id=9259&from_date=21.06.2017&to_date=21.09.2017&Authorization=' + config.apiKey // url for testing specific string of city games during dev
 
 // Check for updating teams occurs once a day
-function CheckTeams () {
+exports.checkTeams = function () {
   console.log('checking team database')
   competitionService.populateCompetitions() // Repopulate competitions
   teamService.populateTeams() // Repopulate teams
@@ -26,7 +19,7 @@ function CheckTeams () {
 
 // Check for live matches should occur every 5 mins
 
-async function CheckLiveMatches () {
+exports.checkLiveMatchs = async function () {
   console.log('checking live matches')
   let res = await MakeApiCall(url) // gets the raw live match JSON data
   HandleLiveMatches(res) // Handles the live matches result
