@@ -5,8 +5,7 @@ let bodyParser = require('body-parser')
 let adminService = require('./services/adminService.js')
 let playerService = require('./services/playerService.js')
 let charitiesService = require('./services/charitiesService.js')
-
-let schedule = require('node-schedule') // This will be the scheduler that sets up function calls at certain time intervals
+let cron = require('cron')
 let scheduleService = require('./services/scheduleService.js') // This holds the functions that will be scheduled by the scheduler
 
 app.use(bodyParser.json())
@@ -56,6 +55,8 @@ app.get('/stats/:uid', function (req, res) {
 
 // adds a user to the Firebase Firestore in order to track their subscriptions and goals
 app.post('/addUser', function (req, res) {
+  console.log('lets look at the req... ')
+  console.log(req.body)
   adminService.addUser(req.body).then(function (response) {
     res.send(response)
   })
@@ -88,9 +89,9 @@ app.post('/unsubscribe', function (req, res) {
 app.listen(8080, function () {
   console.log('Listening on port 8080!')
 
-  var rule = new schedule.RecurrenceRule()
-  rule.hour = 2 // Should run at 2 am all the time
-  rule.minute = 0 // We have to set minute to 0 or this will run every minute at 2 am
-  schedule.scheduleJob(rule, scheduleService.checkTeams) // Schedules the check for team values in the database
-  schedule.scheduleJob('*/1 * * * *', scheduleService.checkLiveMatches) // Schedules the check for checking for live matches
+  let liveMatchesJob = new cron.CronJob('0 */1 * * * *', scheduleService.checkLiveMatchs)
+  let teamsJob = new cron.CronJob('0 0 2 * * *', scheduleService.checkTeams)
+
+  liveMatchesJob.start()
+  teamsJob.start()
 })
