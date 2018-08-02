@@ -151,3 +151,13 @@ __24/07/18__
 - made a tests directory and added one empty test that is blank (passes)
 
 - changed npm test to execute jest across the project
+
+__31/07/18__
+
+- Removed node-schedule dependency and switched responsibility over to using cron tasks
+
+- changed style of scheduleService public API to be consistent with rest of proj
+
+__02/08/18__
+
+- Added trimming of player objects passed back to client as a responsibility of playerService

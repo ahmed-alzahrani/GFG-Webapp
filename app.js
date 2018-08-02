@@ -89,7 +89,7 @@ app.post('/unsubscribe', function (req, res) {
 app.listen(8080, function () {
   console.log('Listening on port 8080!')
 
-  let liveMatchesJob = new cron.CronJob('0 */1 * * * *', scheduleService.checkLiveMatchs)
+  let liveMatchesJob = new cron.CronJob('0 */20 * * * *', scheduleService.checkLiveMatchs)
   let teamsJob = new cron.CronJob('0 0 2 * * *', scheduleService.checkTeams)
 
   liveMatchesJob.start()

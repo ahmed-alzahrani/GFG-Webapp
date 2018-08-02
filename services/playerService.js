@@ -9,8 +9,25 @@ exports.populatePlayers = function () {
 }
 
 exports.players = function () {
+  let players = []
   var obj = JSON.parse(fs.readFileSync('Resources/Players/players.json', 'utf8'))
-  return obj.players
+  for (var i = 0; i < obj.players.length; i++) {
+    let player = {
+      id: obj.players[i].id,
+      name: obj.players[i].name,
+      number: obj.players[i].number,
+      age: obj.players[i].age,
+      position: obj.players[i].position,
+      injured: obj.players[i].injured,
+      goals: obj.players[i].goals,
+      assists: obj.players[i].assists,
+      team: obj.players[i].team,
+      team_id: obj.players[i].team_id,
+      league: obj.players[i].league
+    }
+    players.push(player)
+  }
+  return players
 }
 
 // fetches and returns detailed data on a specific player at a url based on that player's id
