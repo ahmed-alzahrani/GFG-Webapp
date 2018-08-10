@@ -161,3 +161,7 @@ __31/07/18__
 __02/08/18__
 
 - Added trimming of player objects passed back to client as a responsibility of playerService
+
+__09/08/18__
+
+- Added imagePath to charity resource json file
