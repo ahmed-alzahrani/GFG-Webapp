@@ -77,6 +77,9 @@ exports.handleGoal = async function (playerId) {
   var ref = db.collection('users')
   ref.get().then(snapshot => {
     snapshot.forEach(user => {
+      if (playerId === '') {
+        playerId = 'empty'
+      }
       var subscriptionRef = db.collection('users').doc(user.id).collection('subscriptions').doc(playerId)
       subscriptionRef.get().then(function (subscription) {
         if (subscription.exists) {

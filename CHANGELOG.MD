@@ -165,3 +165,7 @@ __02/08/18__
 __09/08/18__
 
 - Added imagePath to charity resource json file
+
+__10/08/18__
+
+- Added check for blank playerId from Football Api
