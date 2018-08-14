@@ -175,3 +175,7 @@ __14/08/18__
 - Tweaked export player objects that are sent to the client to allow for temporary population for the detailed players page
 
 - Added check for blank player number on data incoming from Football API service
+
+- Added countriesBuild and countriesService to populate /Resources/Countries/countries.json with a list of country names as taken from [rest countries](https://restcountries.eu)
+
+- Added route at /countries to return the full list of countries to the client

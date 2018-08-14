@@ -86,7 +86,6 @@ exports.handleGoal = async function (playerId) {
           let stats = updateStats(user.data().stats, subscription.data(), playerId)
           ref.doc(user.id).update({ stats: stats })
           mailService.sendGoalEmail(user.data().email, subscription.data().charity, subscription.data().name)
-          // create a new service, mailService? that uses nodeMailer to email the user, informing them that they have a new goal scored
         } else {
         }
       })
@@ -168,8 +167,10 @@ function updateStats (stats, subscription, playerId) {
 // writes a new user object into the Firebase Firestore NoSQL database based on the auth user created
 function writeUser (user) {
   let obj = {
-    name: '',
+    first: '',
+    last: '',
     email: user.email,
+    birthday: '',
     stats:
       {
         goals: 0,

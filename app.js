@@ -5,6 +5,7 @@ let bodyParser = require('body-parser')
 let adminService = require('./services/adminService.js')
 let playerService = require('./services/playerService.js')
 let charitiesService = require('./services/charitiesService.js')
+let countriesService = require('./services/countriesService.js')
 let cron = require('cron')
 let scheduleService = require('./services/scheduleService.js') // This holds the functions that will be scheduled by the scheduler
 
@@ -21,6 +22,10 @@ app.get('/player/:playerId', function (req, res) {
   playerService.player(req.params.playerId).then(function (player) {
     res.send(player)
   })
+})
+
+app.get('/countries', function (req, res) {
+  res.send(countriesService.countries())
 })
 
 app.get('/charities', function (req, res) {
