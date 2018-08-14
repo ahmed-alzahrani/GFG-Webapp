@@ -56,6 +56,9 @@ function createPlayers () {
         let player = squad[x]
 
         // edit some player info before we add it to our array
+        if (player.number === '') {
+          player.number = '0'
+        }
         adjustPosition(player)
         player.team = teamName
         player.team_id = teamId

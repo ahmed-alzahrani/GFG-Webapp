@@ -173,3 +173,5 @@ __10/08/18__
 __14/08/18__
 
 - Tweaked export player objects that are sent to the client to allow for temporary population for the detailed players page
+
+- Added check for blank player number on data incoming from Football API service
