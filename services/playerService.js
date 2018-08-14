@@ -15,15 +15,18 @@ exports.players = function () {
     let player = {
       id: obj.players[i].id,
       name: obj.players[i].name,
-      number: obj.players[i].number,
       age: obj.players[i].age,
       position: obj.players[i].position,
+      team: obj.players[i].team_id,
+      teamName: obj.players[i].team,
+      league: obj.players[i].league,
+      number: obj.players[i].number,
       injured: obj.players[i].injured,
+      appearences: obj.players[i].appearences,
       goals: obj.players[i].goals,
       assists: obj.players[i].assists,
-      team: obj.players[i].team,
-      team_id: obj.players[i].team_id,
-      league: obj.players[i].league
+      yellowcards: obj.players[i].yellowcards,
+      redcards: obj.players[i].redcards
     }
     players.push(player)
   }

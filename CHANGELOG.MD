@@ -169,3 +169,7 @@ __09/08/18__
 __10/08/18__
 
 - Added check for blank playerId from Football Api
+
+__14/08/18__
+
+- Tweaked export player objects that are sent to the client
