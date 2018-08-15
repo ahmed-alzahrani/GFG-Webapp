@@ -171,6 +171,7 @@ function writeUser (user) {
     last: '',
     email: user.email,
     birthday: '',
+    country: '',
     stats:
       {
         goals: 0,

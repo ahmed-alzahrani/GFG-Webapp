@@ -179,3 +179,7 @@ __14/08/18__
 - Added countriesBuild and countriesService to populate /Resources/Countries/countries.json with a list of country names as taken from [rest countries](https://restcountries.eu)
 
 - Added route at /countries to return the full list of countries to the client
+
+__15/08/18__
+
+- Slight tweak to how a user object is stored in Firestore
