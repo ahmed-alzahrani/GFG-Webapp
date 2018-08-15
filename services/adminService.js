@@ -83,6 +83,10 @@ exports.handleGoal = async function (playerId) {
       var subscriptionRef = db.collection('users').doc(user.id).collection('subscriptions').doc(playerId)
       subscriptionRef.get().then(function (subscription) {
         if (subscription.exists) {
+          let newGoals = subscription.data().goals + 1
+          subscriptionRef.doc(playerId).update({
+            goals: newGoals
+          })
           let stats = updateStats(user.data().stats, subscription.data(), playerId)
           ref.doc(user.id).update({ stats: stats })
           mailService.sendGoalEmail(user.data().email, subscription.data().charity, subscription.data().name)
@@ -214,6 +218,7 @@ function addSubscription (request) {
     teamName: request.teamName,
     charity: request.charityName,
     charityId: request.charityId,
+    goals: 0,
     time: timeString
   }
 

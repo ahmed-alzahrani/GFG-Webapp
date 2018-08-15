@@ -185,3 +185,5 @@ __15/08/18__
 - Slight tweak to how a user object is stored in Firestore
 
 - Changed route to get a user's stats to a route that gets a user's profile, with their stats contained there within
+
+- Added a counter for goals in each subscription
