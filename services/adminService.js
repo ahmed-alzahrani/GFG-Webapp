@@ -68,8 +68,8 @@ exports.getMatches = async function (ids) {
   return matches.sort(util.compareMatches)
 }
 
-exports.getStats = async function (uid) {
-  let response = await stats(uid)
+exports.getProfile = async function (uid) {
+  let response = await profile(uid)
   return response
 }
 
@@ -287,11 +287,19 @@ function teamIds (id) {
   return response
 }
 
-function stats (uid) {
+function profile (uid) {
   var userRef = db.collection('users').doc(uid)
   let response = userRef.get().then(function (doc) {
     if (doc.exists) {
-      return doc.data().stats
+      let obj = {
+        birthday: doc.data().birthday,
+        country: doc.data().country,
+        email: doc.data().email,
+        first: doc.data().first,
+        last: doc.data().last,
+        stats: doc.data().stats
+      }
+      return obj
     } else {
       return generateResponse(false, 'User does not exist')
     }

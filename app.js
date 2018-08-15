@@ -52,9 +52,9 @@ app.get('/playerMatches/:teamId', function (req, res) {
   })
 })
 
-app.get('/stats/:uid', function (req, res) {
-  adminService.getStats(req.params.uid).then(function (stats) {
-    res.send(stats)
+app.get('/profile/:uid', function (req, res) {
+  adminService.getProfile(req.params.uid).then(function (profile) {
+    res.send(profile)
   })
 })
 
