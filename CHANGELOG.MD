@@ -189,3 +189,9 @@ __15/08/18__
 - Added a counter for goals in each subscription
 
 - Server now also serves goal total when passing back subscription info
+
+__16/08/18__
+
+- Added route for participants/uid that fetches the participants of a match that a user is subscribed to
+
+- Changed the util that develops dates for fetching user matches to start today and end 1 month from the current date when fetching matches

@@ -58,6 +58,12 @@ app.get('/profile/:uid', function (req, res) {
   })
 })
 
+app.post('/participants/:uid', function (req, res) {
+  adminService.getParticipants(req.body, req.params.uid).then(function (participants) {
+    res.send(participants)
+  })
+})
+
 // adds a user to the Firebase Firestore in order to track their subscriptions and goals
 app.post('/addUser', function (req, res) {
   adminService.addUser(req.body).then(function (response) {
@@ -65,6 +71,7 @@ app.post('/addUser', function (req, res) {
   })
 })
 
+// app.GET
 app.post('/amISubscribed', function (req, res) {
   adminService.amISubscribed(req.body).then(function (response) {
     res.send(response)
@@ -77,12 +84,14 @@ app.post('/subscribe', function (req, res) {
   })
 })
 
+// APP.PUT
 app.post('/updateSubscription', function (req, res) {
   adminService.updateSubscription(req.body).then(function (response) {
     res.send(response)
   })
 })
 
+// APP.DELETE
 app.post('/unsubscribe', function (req, res) {
   adminService.unsubscribe(req.body).then(function (response) {
     res.send(response)

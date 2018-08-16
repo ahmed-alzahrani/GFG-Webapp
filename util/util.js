@@ -35,11 +35,13 @@ function getDates () {
 }
 
 function getCurrentDate () {
-  let date = moment().subtract(1, 'y').format('DD/MM/YYYY')
+  // let date = moment().subtract(1, 'y').format('DD/MM/YYYY')
+  let date = moment().format('DD/MM/YYYY')
   return date.replace('/', '.').replace('/', '.')
 }
 
 function getFutureDate () {
-  let date = moment().subtract(1, 'y').add(3, 'M').format('DD/MM/YYYY')
+  // let date = moment().subtract(1, 'y').add(3, 'M').format('DD/MM/YYYY')
+  let date = moment().add(1, 'M').format('DD/MM/YYYY')
   return date.replace('/', '.').replace('/', '.')
 }

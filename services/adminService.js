@@ -73,6 +73,11 @@ exports.getProfile = async function (uid) {
   return response
 }
 
+exports.getParticipants = async function (request, uid) {
+  let response = participants(request, uid)
+  return response
+}
+
 exports.handleGoal = async function (playerId) {
   var ref = db.collection('users')
   ref.get().then(snapshot => {
@@ -309,6 +314,26 @@ function profile (uid) {
     } else {
       return generateResponse(false, 'User does not exist')
     }
+  })
+  return response
+}
+
+function participants (request, uid) {
+  let home = request.localTeamId
+  let visitor = request.visitorTeamId
+
+  let response = db.collection('users').doc(uid).collection('subscriptions').get().then(function (querySnapshot) {
+    let participants = []
+    querySnapshot.forEach(function (doc) {
+      let data = doc.data()
+      if (data.team === home || data.team === visitor) {
+        let string = data.name + ' (' + data.teamName + ')'
+        participants.push(string)
+      }
+    })
+    return participants
+  }).catch(function (error) {
+    console.log(error)
   })
   return response
 }
