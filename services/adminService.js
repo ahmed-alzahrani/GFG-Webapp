@@ -265,6 +265,7 @@ function subscriptions (id) {
         name: data.name,
         team: data.team,
         teamName: data.teamName,
+        goals: data.goals,
         time: data.time
       }
       collection.push(obj)

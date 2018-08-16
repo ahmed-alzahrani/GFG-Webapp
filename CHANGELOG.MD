@@ -187,3 +187,5 @@ __15/08/18__
 - Changed route to get a user's stats to a route that gets a user's profile, with their stats contained there within
 
 - Added a counter for goals in each subscription
+
+- Server now also serves goal total when passing back subscription info
