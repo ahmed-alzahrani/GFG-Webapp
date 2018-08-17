@@ -195,3 +195,7 @@ __16/08/18__
 - Added route for participants/uid that fetches the participants of a match that a user is subscribed to
 
 - Changed the util that develops dates for fetching user matches to start today and end 1 month from the current date when fetching matches
+
+__17/08/18__
+
+- Added route for updateProfile that lets a user update their first/last names and country of residence from a picker in the client.

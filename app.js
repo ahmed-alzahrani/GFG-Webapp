@@ -91,6 +91,12 @@ app.post('/updateSubscription', function (req, res) {
   })
 })
 
+app.put('/updateProfile/:uid', function (req, res) {
+  adminService.updateProfile(req.body, req.params.uid).then(function (response) {
+    res.send(response)
+  })
+})
+
 // APP.DELETE
 app.post('/unsubscribe', function (req, res) {
   adminService.unsubscribe(req.body).then(function (response) {

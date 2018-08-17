@@ -73,6 +73,12 @@ exports.getProfile = async function (uid) {
   return response
 }
 
+exports.updateProfile = async function (request, uid) {
+  console.log(request)
+  let response = editProfile(request, uid)
+  return response
+}
+
 exports.getParticipants = async function (request, uid) {
   let response = participants(request, uid)
   return response
@@ -334,6 +340,20 @@ function participants (request, uid) {
     return participants
   }).catch(function (error) {
     console.log(error)
+  })
+  return response
+}
+
+function editProfile (request, uid) {
+  let obj = {
+    first: request.first,
+    last: request.last,
+    country: request.country
+  }
+  let response = db.collection('users').doc(uid).update(obj).then(function () {
+    return generateResponse(true, 'Successfully updated profile!')
+  }).catch(function (error) {
+    return generateResponse(false, 'Error updating profile: ' + error)
   })
   return response
 }

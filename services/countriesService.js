@@ -17,7 +17,10 @@ async function createCountries () {
   let response = await fetch(url)
   let data = await response.json()
   for (var i = 0; i < data.length; i++) {
-    countries.push(data[i].name)
+    let name = data[i].name
+    if (name.length <= 40) { // adjust length of countries here
+      countries.push(name)
+    }
   }
   let obj = {
     id: 'countries',
