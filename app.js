@@ -1,13 +1,11 @@
 let express = require('express')
-let app = express()
+const app = express()
 let bodyParser = require('body-parser')
 
 let adminService = require('./services/adminService.js')
 let playerService = require('./services/playerService.js')
 let charitiesService = require('./services/charitiesService.js')
 let countriesService = require('./services/countriesService.js')
-let cron = require('cron')
-let scheduleService = require('./services/scheduleService.js') // This holds the functions that will be scheduled by the scheduler
 
 app.use(bodyParser.json())
 
@@ -104,12 +102,4 @@ app.post('/unsubscribe', function (req, res) {
   })
 })
 
-app.listen(8080, function () {
-  console.log('Listening on port 8080!')
-
-  let liveMatchesJob = new cron.CronJob('0 */20 * * * *', scheduleService.checkLiveMatchs)
-  let teamsJob = new cron.CronJob('0 0 2 * * *', scheduleService.checkTeams)
-
-  liveMatchesJob.start()
-  teamsJob.start()
-})
+module.exports = app

@@ -16,10 +16,10 @@
     "playerBuild": "node prestart/builds/playerBuild.js",
     "charitiesBuild": "node prestart/builds/charitiesBuild.js",
     "matchesBuild": "node prestart/builds/matchesBuild.js",
-    "start": "node app.js",
+    "start": "node server.js",
     "prestart": "npm run countriesBuild && npm run competitionBuild && npm run teamBuild && npm run playerBuild && npm run charitiesBuild && npm run matchesBuild",
     "restart": "npm run clean && npm start",
-    "quickstart": "node app.js",
+    "quickstart": "node server.js",
     "test": "jest"
   },
   "author": "ahmed-alzahrani",

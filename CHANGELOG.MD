@@ -199,3 +199,5 @@ __16/08/18__
 __17/08/18__
 
 - Added route for updateProfile that lets a user update their first/last names and country of residence from a picker in the client.
+
+- Seperated app and server so that the server won't listen on a local port after testing
