@@ -3,10 +3,8 @@ var admin = require('firebase-admin')
 let config = require('../config/config.js')
 
 // removes all JSON in the Resources directory with rimraf
-function cleanJSON () {
-  rimraf('./Resources', function () {
-    console.log('successfully removed JSON resources')
-  })
+exports.cleanJSON = function () {
+  rimraf('./Resources', function () {})
 }
 
 function cleanStats () {
@@ -31,5 +29,5 @@ function cleanStats () {
   })
 }
 
-cleanJSON()
+this.cleanJSON()
 cleanStats()

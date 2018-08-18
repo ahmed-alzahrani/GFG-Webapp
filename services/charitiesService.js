@@ -7,12 +7,13 @@ exports.charities = function () {
   return obj.charities
 }
 
-exports.populateCharities = function () {
-  createCharities()
+exports.populateCharities = async function () {
+  let charities = await createCharities()
+  return charities
 }
 
 // writes charities data at /Resources/Charities based on the hard-coded config charity data
-function createCharities () {
+async function createCharities () {
   let charities = JSON.parse(fs.readFileSync('config/charities.json', 'utf8'))
   let obj = {
     id: 'charities',
