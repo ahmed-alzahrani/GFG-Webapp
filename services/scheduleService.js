@@ -1,8 +1,6 @@
 let fetch = require('node-fetch')
 let config = require('../config/config.js')
-let playerService = require('../services/playerService.js')
-let competitionService = require('../services/competitionService.js')
-let teamService = require('../services/teamService.js')
+let build = require('../prestart/build.js')
 let adminService = require('../services/adminService.js')
 let fs = require('fs')
 let matchesStore = require('json-fs-store')('./Resources/Matches')
@@ -12,9 +10,7 @@ let url = config.baseUrl + 'matches?Authorization=' + config.apiKey // <--- URL 
 // Check for updating teams occurs once a day
 exports.checkTeams = function () {
   console.log('checking team database')
-  competitionService.populateCompetitions() // Repopulate competitions
-  teamService.populateTeams() // Repopulate teams
-  playerService.populatePlayers() // Repopulate players
+  build.build()
 }
 
 // Check for live matches should occur every 5 mins

@@ -13,6 +13,10 @@ let playerStore = require('json-fs-store')('./Resources/Players')
 let ids = config.competitionIds
 var teamCount = 0
 
+exports.build = function () {
+  createCharities()
+}
+
 function createCharities () {
   let charities = JSON.parse(fs.readFileSync('config/charities.json', 'utf8'))
   let obj = {
@@ -194,5 +198,3 @@ function buildPlayers () {
     console.log('number of players is... ' + playerArr.length)
   })
 }
-
-createCharities()
