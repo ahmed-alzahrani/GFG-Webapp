@@ -30,4 +30,4 @@ function cleanStats () {
 }
 
 this.cleanJSON()
-cleanStats()
+// cleanStats()

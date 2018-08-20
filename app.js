@@ -1,11 +1,10 @@
 let express = require('express')
 const app = express()
 let bodyParser = require('body-parser')
+let fs = require('fs')
 
 let adminService = require('./services/adminService.js')
 let playerService = require('./services/playerService.js')
-let charitiesService = require('./services/charitiesService.js')
-let countriesService = require('./services/countriesService.js')
 
 app.use(bodyParser.json())
 
@@ -23,11 +22,13 @@ app.get('/player/:playerId', function (req, res) {
 })
 
 app.get('/countries', function (req, res) {
-  res.send(countriesService.countries())
+  var obj = JSON.parse(fs.readFileSync('Resources/Countries/countries.json', 'utf8'))
+  res.send(obj.countries)
 })
 
 app.get('/charities', function (req, res) {
-  res.send(charitiesService.charities())
+  var obj = JSON.parse(fs.readFileSync('Resources/Charities/charities.json', 'utf8'))
+  res.send(obj.charities)
 })
 
 app.get('/subscriptions/:userId', function (req, res) {

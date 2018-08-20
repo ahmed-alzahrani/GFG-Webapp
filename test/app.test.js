@@ -1,6 +1,7 @@
 /*
 global describe:true
 */
+
 var charitiesService = require('../services/charitiesService.js')
 // const clean = require('../clean/clean.js')
 const fs = require('fs')
