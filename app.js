@@ -16,7 +16,12 @@ app.use(bodyParser.json())
 
 // Return the player json information
 app.get('/player/all', function (req, res) {
-  res.send(playerService.players())
+  let players = playerService.players()
+  if (players.length > 0) {
+    res.status(200).send(players)
+  } else {
+    res.status(500).send(players)
+  }
 })
 
 app.get('/player/:playerId', function (req, res) {

@@ -4,27 +4,32 @@ let fs = require('fs')
 
 exports.players = function () {
   let players = []
-  var obj = JSON.parse(fs.readFileSync('Resources/Players/players.json', 'utf8'))
-  for (var i = 0; i < obj.players.length; i++) {
-    let player = {
-      id: obj.players[i].id,
-      name: obj.players[i].name,
-      age: obj.players[i].age,
-      position: obj.players[i].position,
-      team: obj.players[i].team_id,
-      teamName: obj.players[i].team,
-      league: obj.players[i].league,
-      number: obj.players[i].number,
-      injured: obj.players[i].injured,
-      appearences: obj.players[i].appearences,
-      goals: obj.players[i].goals,
-      assists: obj.players[i].assists,
-      yellowcards: obj.players[i].yellowcards,
-      redcards: obj.players[i].redcards
+  try {
+    var obj = JSON.parse(fs.readFileSync('Resources/Players/players.json', 'utf8'))
+    for (var i = 0; i < obj.players.length; i++) {
+      let player = {
+        id: obj.players[i].id,
+        name: obj.players[i].name,
+        age: obj.players[i].age,
+        position: obj.players[i].position,
+        team: obj.players[i].team_id,
+        teamName: obj.players[i].team,
+        league: obj.players[i].league,
+        number: obj.players[i].number,
+        injured: obj.players[i].injured,
+        appearences: obj.players[i].appearences,
+        goals: obj.players[i].goals,
+        assists: obj.players[i].assists,
+        yellowcards: obj.players[i].yellowcards,
+        redcards: obj.players[i].redcards
+      }
+      players.push(player)
     }
-    players.push(player)
+    return players
+  } catch (err) {
+    console.log('error trying to get players ', err)
+    return players
   }
-  return players
 }
 
 // fetches and returns detailed data on a specific player at a url based on that player's id

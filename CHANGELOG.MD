@@ -219,3 +219,5 @@ __20/08/18__
 __23/08/18__
 
 - Re-designed end-points to adhere to OpenAPI specifications
+
+- added try/catch to playerService to catch error where player JSON file does not exist and return 500 if so
