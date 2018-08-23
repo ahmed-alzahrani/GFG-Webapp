@@ -79,8 +79,8 @@ exports.updateProfile = async function (request, uid) {
   return response
 }
 
-exports.getParticipants = async function (request, uid) {
-  let response = participants(request, uid)
+exports.getParticipants = async function (uid, local, visitor) {
+  let response = participants(uid, local, visitor)
   return response
 }
 
@@ -206,8 +206,8 @@ function writeUser (user) {
 }
 
 // returns to the client whether the user is subscribed already to a particular player
-function subscriptionCheck (request) {
-  var subscriptionRef = db.collection('users').doc(request.uid).collection('subscriptions').doc(request.playerId)
+function subscriptionCheck (uid, playerId) {
+  var subscriptionRef = db.collection('users').doc(uid).collection('subscriptions').doc(playerId)
   let response = subscriptionRef.get().then(function (doc) {
     if (doc.exists) {
       return generateResponse(true, 'Subscription exists')
@@ -324,15 +324,12 @@ function profile (uid) {
   return response
 }
 
-function participants (request, uid) {
-  let home = request.localTeamId
-  let visitor = request.visitorTeamId
-
+function participants (uid, local, visitor) {
   let response = db.collection('users').doc(uid).collection('subscriptions').get().then(function (querySnapshot) {
     let participants = []
     querySnapshot.forEach(function (doc) {
       let data = doc.data()
-      if (data.team === home || data.team === visitor) {
+      if (data.team === local || data.team === visitor) {
         let string = data.name + ' (' + data.teamName + ')'
         participants.push(string)
       }

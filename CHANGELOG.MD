@@ -215,3 +215,7 @@ __20/08/18__
 - added prestart script that triggers it so that it doesnt get triggered any time the build is required
 
 - updated REST methods of two routes in app
+
+__23/08/18__
+
+- Re-designed end-points to adhere to OpenAPI specifications
