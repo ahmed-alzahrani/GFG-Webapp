@@ -221,3 +221,7 @@ __23/08/18__
 - Re-designed end-points to adhere to OpenAPI specifications
 
 - added try/catch to playerService to catch error where player JSON file does not exist and return 500 if so
+
+- Added similar error handling to the routes for a player's matches and countries, also replaced res.send(200) with res.sendStatus(500) as send is deprecated
+
+- Added new Util functions buildPlayer and buildMatch to handle parse-ing data from Api-Football and casting appropriate fields to ints before sending them

@@ -60,8 +60,9 @@ exports.getMatches = async function (ids) {
       if (matchIds.includes(data[x].id)) {
         continue
       } else {
+        let match = util.buildMatch(data[x])
         matchIds.push(data[x].id)
-        matches.push(data[x])
+        matches.push(match)
       }
     }
   }
@@ -74,7 +75,6 @@ exports.getProfile = async function (uid) {
 }
 
 exports.updateProfile = async function (request, uid) {
-  console.log(request)
   let response = editProfile(request, uid)
   return response
 }

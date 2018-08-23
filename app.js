@@ -20,7 +20,7 @@ app.get('/player/all', function (req, res) {
   if (players.length > 0) {
     res.status(200).send(players)
   } else {
-    res.status(500).send(players)
+    res.sendStatus(500)
   }
 })
 
@@ -32,13 +32,22 @@ app.get('/player/:playerId', function (req, res) {
 
 app.get('/player/matches/:teamId', function (req, res) {
   adminService.getMatches([req.params.teamId]).then(function (matches) {
-    res.send(matches)
+    if (matches.length > 0) {
+      res.status(200).send(matches)
+    } else {
+      res.sendStatus(404)
+    }
   })
 })
 
 app.get('/countries', function (req, res) {
-  var obj = JSON.parse(fs.readFileSync('Resources/Countries/countries.json', 'utf8'))
-  res.send(obj.countries)
+  try {
+    var obj = JSON.parse(fs.readFileSync('Resources/Countries/countries.json', 'utf8'))
+    res.status(200).send(obj.countries)
+  } catch (err) {
+    console.log('error retrieving countries: ', err)
+    res.sendStatus(500)
+  }
 })
 
 app.get('/charities', function (req, res) {
