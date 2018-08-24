@@ -93,7 +93,11 @@ app.post('/user/profile', function (req, res) {
 
 app.get('/user/subscriptions/:userId', function (req, res) {
   adminService.getSubscriptions(req.params.userId).then(function (response) {
-    res.send(response)
+    if (response.length > 0) {
+      res.status(200).send(response)
+    } else {
+      res.sendStatus(404)
+    }
   })
 })
 

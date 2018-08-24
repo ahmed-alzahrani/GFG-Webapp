@@ -225,3 +225,9 @@ __23/08/18__
 - Added similar error handling to the routes for a player's matches and countries, also replaced res.send(200) with res.sendStatus(500) as send is deprecated
 
 - Added new Util functions buildPlayer and buildMatch to handle parse-ing data from Api-Football and casting appropriate fields to ints before sending them
+
+__24/08/18__
+
+- updated charities / user/profile/:userId and post /user/profile routes to include error handling and different status codes
+
+- Tweaked response to user subscriptions and added WIP implementation of swagger.yaml

@@ -273,13 +273,13 @@ function subscriptions (id) {
     querySnapshot.forEach(function (doc) {
       let data = doc.data()
       let obj = {
-        id: doc.id,
+        id: parseInt(doc.id),
         charity: data.charity,
-        charityId: data.charityId,
+        charityId: parseInt(data.charityId),
         name: data.name,
-        team: data.team,
+        team: parseInt(data.team),
         teamName: data.teamName,
-        goals: data.goals,
+        goals: parseInt(data.goals),
         time: data.time
       }
       collection.push(obj)
