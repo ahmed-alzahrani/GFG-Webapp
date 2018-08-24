@@ -18,8 +18,8 @@ exports.addUser = async function (user) {
   return response
 }
 
-exports.amISubscribed = async function (request) {
-  let response = await subscriptionCheck(request)
+exports.amISubscribed = async function (user, player) {
+  let response = await subscriptionCheck(user, player)
   return response
 }
 
@@ -181,6 +181,9 @@ function updateStats (stats, subscription, playerId) {
 }
 // writes a new user object into the Firebase Firestore NoSQL database based on the auth user created
 function writeUser (user) {
+  if (user.email == null || user.uid == null) {
+    return 404
+  }
   let obj = {
     first: '',
     last: '',
@@ -318,7 +321,7 @@ function profile (uid) {
       }
       return obj
     } else {
-      return generateResponse(false, 'User does not exist')
+      return { code: 404 }
     }
   })
   return response
@@ -342,15 +345,20 @@ function participants (uid, local, visitor) {
 }
 
 function editProfile (request, uid) {
+  if (request.country == null || request.first == null || request.last == null) {
+    return { code: 404 }
+  }
   let obj = {
     first: request.first,
     last: request.last,
     country: request.country
   }
   let response = db.collection('users').doc(uid).update(obj).then(function () {
-    return generateResponse(true, 'Successfully updated profile!')
-  }).catch(function (error) {
-    return generateResponse(false, 'Error updating profile: ' + error)
+    console.log('success')
+    return { code: 200, response: 'successfully updated profile' }
+  }).catch(function (err) {
+    console.log('Error updating profile: ', err)
+    return { code: 404 }
   })
   return response
 }

@@ -48,7 +48,7 @@ module.exports = {
   buildMatch: function (obj) {
     let match = {
       id: parseInt(obj.id),
-      comp_id: parseInt(obj.id),
+      comp_id: parseInt(obj.comp_id),
       formatted_date: obj.formatted_date,
       season: obj.season,
       week: parseInt(obj.week),

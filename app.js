@@ -51,35 +51,43 @@ app.get('/countries', function (req, res) {
 })
 
 app.get('/charities', function (req, res) {
-  var obj = JSON.parse(fs.readFileSync('Resources/Charities/charities.json', 'utf8'))
-  res.send(obj.charities)
-})
-
-// USER ROUTES HERE
-
-app.get('/user/matches/:userId', function (req, res) {
-  adminService.getTeamIds(req.params.userId).then(function (ids) {
-    adminService.getMatches(ids).then(function (matches) {
-      res.send(matches)
-    })
-  })
+  try {
+    var obj = JSON.parse(fs.readFileSync('Resources/Charities/charities.json', 'utf8'))
+    res.status(200).send(obj.charities)
+  } catch (err) {
+    console.log('error retrieving charities: ', err)
+    res.sendStatus(500)
+  }
 })
 
 app.get('/user/profile/:uid', function (req, res) {
   adminService.getProfile(req.params.uid).then(function (profile) {
-    res.send(profile)
-  })
-})
-
-app.post('/user/profile', function (req, res) {
-  adminService.addUser(req.body).then(function (response) {
-    res.send(response)
+    if (profile.code === 404) {
+      res.sendStatus(404)
+    } else {
+      res.status(200).send(profile)
+    }
   })
 })
 
 app.put('/user/profile/:uid', function (req, res) {
   adminService.updateProfile(req.body, req.params.uid).then(function (response) {
-    res.send(response)
+    if (response.code === 200) {
+      res.status(200).send(response.response)
+    } else {
+      console.log('404')
+      res.sendStatus(404)
+    }
+  })
+})
+
+app.post('/user/profile', function (req, res) {
+  adminService.addUser(req.body).then(function (response) {
+    if (response === 404) {
+      res.sendStatus(404)
+    } else {
+      res.sendStatus(200)
+    }
   })
 })
 
@@ -110,6 +118,14 @@ app.delete('/user/subscriptions', function (req, res) {
 app.get('/user/subscriptions/:user/:player', function (req, res) {
   adminService.amISubscribed(req.params.user, req.params.player).then(function (response) {
     res.send(response)
+  })
+})
+
+app.get('/user/matches/:userId', function (req, res) {
+  adminService.getTeamIds(req.params.userId).then(function (ids) {
+    adminService.getMatches(ids).then(function (matches) {
+      res.send(matches)
+    })
   })
 })
 
