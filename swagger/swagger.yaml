@@ -5,8 +5,7 @@ info:
   version: 1.0.0
   title: Goals For Good Server
 host: localhost:8080
-basePath: /
-tags: 
+tags:
   - name: Player
     description: Operations concerning player information.
   - name: Countries
@@ -15,7 +14,7 @@ tags:
     description: Operations concerning charity information.
   - name: User
     description: Operations concerning user profiles and subscriptions.
-schemes: 
+schemes:
   - http
   - https
 paths:
@@ -23,7 +22,7 @@ paths:
     get:
       tags:
         - Player
-      summary: Retrieves info on all players 
+      summary: Retrieves info on all players
       operationId: getAllPlayers
       produces:
         - application/json
@@ -43,10 +42,10 @@ paths:
         - Player
       summary: Retrieves a player's matches
       operationId: getPlayerMatches
-      produces: 
+      produces:
         - application/json
         - application/xml
-      parameters: 
+      parameters:
         - name: teamId
           in: path
           description: id of team the player plays for
@@ -84,8 +83,7 @@ paths:
       tags:
         - Charities
       summary: Retrieves a list of all charities
-      operationId: getCharities
-      produces: 
+      produces:
         - application/json
         - application/xml
       responses:
@@ -97,16 +95,40 @@ paths:
               $ref: '#/definitions/Charity'
         '500':
           description: Internal Server Error
+  /user/profile:
+    post:
+      tags:
+        - User
+      summary: Adds a new user in Firebase Firestore
+      consumes:
+        - application/json
+      parameters:
+        - name: user
+          in: body
+          schema:
+            type: object
+            required:
+              - uid
+              - email
+            properties:
+              uid:
+                type: string
+              email:
+                type: string
+      responses:
+        '200':
+          description: successful operation
+        '404':
+          description: UID or Email is missing
   /'user/profile/{uid}':
     get:
-      tags: 
+      tags:
         - User
       summary: Retrieves the details of a user profile
-      operationId: getUserProfile
-      produces: 
+      produces:
         - application/json
         - application/xml
-      parameters: 
+      parameters:
         - name: uid
           in: path
           description: unique user id
@@ -120,14 +142,27 @@ paths:
         '404':
           description: Not Found
     put:
-      tags: 
+      tags:
         - User
       summary: Updates a user profile
-      operationId: putUserProfile
-      produces: 
+      consumes:
         - application/json
-        - application/xml
-      parameters: 
+      parameters:
+        - name: user
+          in: body
+          schema:
+            type: object
+            required:
+              - first
+              - last
+              - country
+            properties:
+              first:
+                type: string
+              last:
+                type: string
+              country:
+                type: string
         - name: uid
           in: path
           description: unique user id
@@ -138,26 +173,103 @@ paths:
           description: successful operation
         '404':
           description: Not Found
-  /user/profile:
+  /user/subscriptions:
     post:
-      tags: 
+      tags:
         - User
-      summary: Adds a new user in Firebase Firestore
-      operationId: postUserProfile
-      produces: 
+      summary: adds a user subscription
+      consumes:
         - application/json
-        - application/xml
+      parameters:
+        - name: subscription
+          in: body
+          schema:
+            type: object
+            required:
+              - uid
+              - playerId
+              - name
+              - team
+              - teamName
+              - charityName
+              - charityId
+            properties:
+              uid:
+                type: string
+              playerId:
+                type: string
+              name:
+                type: string
+              team:
+                type: string
+              charityName:
+                type: string
+              charityId:
+                type: string
       responses:
         '200':
           description: successful operation
         '404':
-          description: UID or Email is missing
+          description: not found
+    put:
+      tags:
+        - User
+      summary: updates a user subscription
+      consumes:
+        - application/json
+      parameters:
+        - name: subscription
+          in: body
+          schema:
+            type: object
+            required:
+              - uid
+              - playerId
+              - charityId
+              - charityName
+            properties:
+              uid:
+                type: string
+              playerId:
+                type: string
+              charityid:
+                type: string
+              charityName:
+                type: string
+      responses:
+        '200':
+          description: successful operation
+        '404':
+          description: not found
+    delete:
+      tags:
+        - User
+      summary: removes a user subscription
+      consumes:
+        - application/json
+      parameters:
+        - name: ids
+          in: body
+          schema:
+            type: object
+            required:
+              - uid
+              - playerId
+            properties:
+              uid:
+                type: string
+              playerId:
+                type: string
+      responses:
+        '200':
+          description: successful operation
+        '404':
+          description: not found
   '/user/subscriptions/{uid}':
     get:
       tags:
         - User
       summary: Gets the subscriptions of the specified user
-      operationId: getUserSubs
       produces:
         - application/json
         - application/xml
@@ -176,31 +288,73 @@ paths:
               $ref: '#/definitions/Subscription'
         '404':
           description: Not Found
-  /user/subscriptions:
-    post:
+  '/user/subscriptions/{uid}/{playerId}':
+    get:
       tags:
         - User
-      summary: adds a user subscription
-      operationId: addSub
+      summary: returns whether or not a user is subscribed to a specific player
+      parameters:
+        - name: uid
+          in: path
+          description: unique user id
+          required: true
+          type: string
+        - name: playerId
+          in: path
+          description: unique player id
+          required: true
+          type: string
       responses:
         '200':
-        description: successful operation
-    put:
+          description: boolean denoting whether or not the operation was successful
+          schema:
+            type: boolean
+  '/user/matches/{uid}':
+    get:
       tags:
         - User
-      summary: updates a user subscription
-      operationId: updateSub
-      produces:
-        - application/json
-        - application/xml
-    delete:
+      summary: Retrieves all matches involving a user's subscription players for the next month
+      parameters:
+        - name: uid
+          in: path
+          description: unique user id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation (empty array if user not found or no matches found)
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Match'
+  '/user/participants/{uid}/{local}/{visitor}':
+    get:
       tags:
         - User
-      summary: removes a user subscription
-      operationId: removeSub
-      produces:
-        - application/json
-        - application/xml
+      summary: Retrieves all players a user is subcribed to participating in a specific match
+      parameters:
+        - name: uid
+          in: path
+          description: unique user id
+          required: true
+          type: string
+        - name: local
+          in: path
+          description: home team id
+          required: true
+          type: string
+        - name: visitor
+          in: path
+          description: visitor team id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              type: string
 definitions:
   Profile:
     type: object
@@ -223,7 +377,7 @@ definitions:
       stats:
         type: object
         properties:
-          topScorer: 
+          topScorer:
             type: string
             example: ''
           allGoals:
@@ -251,7 +405,7 @@ definitions:
         type: integer
         example: 158575
         description: the id of the player in the subscription
-      charity: 
+      charity:
         type: string
         example: Sightsavers
       charityId:
@@ -401,13 +555,13 @@ definitions:
         example: '[3-1]'
       et_score:
         type: string
-        example: 
+        example:
       penalty_local:
         type: string
-        example: 
+        example:
       penalty_visitor:
         type: string
-        example: 
+        example:
       events:
         type: array
         items:
@@ -415,7 +569,7 @@ definitions:
   Event:
     type: object
     properties:
-      id: 
+      id:
         type: integer
         example: 24531251
       type:
@@ -441,7 +595,7 @@ definitions:
         example: ""
       assist_id:
         type: integer
-        example: 
+        example:
       result:
         type: string
         example: '[1-0]'

@@ -1,11 +1,14 @@
 let fetch = require('node-fetch')
 let config = require('../config/config.js')
 let build = require('../prestart/build.js')
-let adminService = require('../services/adminService.js')
+let admin = require('../services/adminService.js')
 let fs = require('fs')
+let mailService = require('../services/mailService.js')
 let matchesStore = require('json-fs-store')('./Resources/Matches')
 let url = config.baseUrl + 'matches?Authorization=' + config.apiKey // <--- URL for actual live matches
 // let url = 'http://api.football-api.com/2.0/matches/?team_id=9259&from_date=21.06.2017&to_date=21.09.2017&Authorization=' + config.apiKey // url for testing specific string of city games during dev
+
+let db = admin.db
 
 // Check for updating teams occurs once a day
 exports.checkTeams = function () {
@@ -144,7 +147,7 @@ function ParseEvents (storedEvents, events) {
     }
     if (!exists && events[i].type === 'goal') {
       storedEvents.push(trimEvent(events[i]))
-      adminService.handleGoal(events[i].player_id)
+      handleGoal(events[i].player_id)
       // a new goal exists! send it to the event and trigger the call for goals
     }
   }
@@ -175,4 +178,108 @@ function trimEvent (matchEvent) {
   }
 
   return obj
+}
+
+async function handleGoal (playerId) {
+  var ref = db.collection('users')
+  ref.get().then(snapshot => {
+    snapshot.forEach(user => {
+      if (playerId === '') {
+        playerId = 'empty'
+      }
+      var subscriptionRef = db.collection('users').doc(user.id).collection('subscriptions').doc(playerId)
+      subscriptionRef.get().then(function (subscription) {
+        if (subscription.exists) {
+          let newGoals = subscription.data().goals + 1
+          subscriptionRef.doc(playerId).update({
+            goals: newGoals
+          })
+          let stats = updateStats(user.data().stats, subscription.data(), playerId)
+          ref.doc(user.id).update({ stats: stats })
+          mailService.sendGoalEmail(user.data().email, subscription.data().charity, subscription.data().name)
+        } else {
+        }
+      })
+    })
+  })
+    .catch(err => {
+      console.log('Error getting all users', err)
+    })
+}
+
+function updateStats (stats, subscription, playerId) {
+  // time stamp of goal being added
+  let timestamp = new Date()
+  let timeString = timestamp.toString()
+  // extract existing stat info to update with
+  let charity = subscription.charityId
+  var goals = stats.goals + 1
+  var allGoals = stats.allGoals
+  var charities = stats.charities
+  var scorers = stats.scorers
+
+  // add the new goal into the allGoals array
+  allGoals.push({
+    charityName: subscription.charity,
+    charity: charity,
+    player: playerId,
+    playerName: subscription.name,
+    teamName: subscription.teamName,
+    team: subscription.team,
+    time: timeString
+  })
+
+  // update charities / scorers with the new goal information
+  var exists = false
+  for (var i = 0; i < charities.length; i++) {
+    if (charities[i].id === charity) {
+      charities[i].count += 1
+      exists = true
+      break
+    }
+  }
+  if (!exists) {
+    charities.push({
+      id: charity,
+      name: subscription.charity,
+      count: 1
+    })
+  }
+
+  exists = false
+  for (i = 0; i < scorers.length; i++) {
+    if (scorers[i].id === playerId) {
+      scorers[i].count += 1
+      exists = true
+      break
+    }
+  }
+
+  if (!exists) {
+    scorers.push({
+      id: playerId,
+      name: subscription.name,
+      count: 1
+    })
+  }
+  charities.sort(findTop)
+  scorers.sort(findTop)
+
+  // return the obj
+  return {
+    goals: goals,
+    allGoals: allGoals,
+    charities: charities,
+    scorers: scorers,
+    topScorer: scorers[0].name,
+    topCharity: charities[0].name
+  }
+}
+
+function findTop (a, b) {
+  if (a.count === b.count) {
+    return a.name.localeCompare(b.name)
+  } else {
+    return a.count - b.count
+  }
 }

@@ -231,3 +231,11 @@ __24/08/18__
 - updated charities / user/profile/:userId and post /user/profile routes to include error handling and different status codes
 
 - Tweaked response to user subscriptions and added WIP implementation of swagger.yaml
+
+- Finished implementation of swagger.yaml, added that and json conversion into swagger directory
+
+- added api-docs route to serve the swagger json files
+
+- finished tweaking responses on all routes
+
+- refactored handleGoal and updateStats from adminService --> scheduleService and re-factored adminService

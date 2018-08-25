@@ -10,9 +10,9 @@ This web-application, is to serve in conjunction with the GFG-IOS client in orde
 1. Query the Api-Football.com service and store JSON information pertaining to different leagues, teams and players on-hand, to be served to the client when necessary, this drastically
 reduces the work-load of the client.
 
-2. Route requests from the client to present them with information on players, charities, and matches depending  on which UIView the client is accessing.
+2. Route requests from the client to present them with information on players, charities, and matches depending  on which view the client is accessing.
 
-3. Facilitate user authentication and CRUD operations on the Google Firestore DB when the user makes changes to their player subscription list
+3. Facilitate user authentication and CRUD operations on the Google Firestore NoSQL DB when the user makes changes to their player subscription list
 
 4. Continually check with the football api service for live match information and store live matches to be compared with the latest information in order to alert users of live goals
 
@@ -49,7 +49,14 @@ Once the packages have been installed, the following npm commands are available 
 - Clean out any information in the /Resources directory
 `npm run clean`
 
+- Launch the server without first populating the resource directory
+`npm run quickstart`
+
 - Populate the /Resources directory and then launch the app to listen on localhost:8080
 `npm start`
 
 - Clean out the /Resources directory, then re-populate it and launch the app to listen on localhost:8080 `npm restart`
+
+- Once the server has launched (currently listens on localhost:8080), you can access more information about all of the endpoints, request and response schema at the route /api-docs, where you will be served the swagger.json file held in the swagger directory.
+
+![api-docs](util/api_docs.PNG)

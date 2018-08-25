@@ -3,14 +3,14 @@ const app = express()
 let bodyParser = require('body-parser')
 let fs = require('fs')
 
-// let swaggerUi = require('swagger-ui-express')
-// let swaggerDoc = require('./swagger.json')
+let swaggerUi = require('swagger-ui-express')
+let swaggerDoc = require('./swagger/swagger.json')
 
 let adminService = require('./services/adminService.js')
 let playerService = require('./services/playerService.js')
 
 app.use(bodyParser.json())
-// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc))
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc))
 
 // set up our routes
 
@@ -83,16 +83,12 @@ app.put('/user/profile/:uid', function (req, res) {
 
 app.post('/user/profile', function (req, res) {
   adminService.addUser(req.body).then(function (response) {
-    if (response === 404) {
-      res.sendStatus(404)
-    } else {
-      res.sendStatus(200)
-    }
+    res.sendStatus(response)
   })
 })
 
 app.get('/user/subscriptions/:userId', function (req, res) {
-  adminService.getSubscriptions(req.params.userId).then(function (response) {
+  adminService.subscriptions(req.params.userId).then(function (response) {
     if (response.length > 0) {
       res.status(200).send(response)
     } else {
@@ -103,25 +99,30 @@ app.get('/user/subscriptions/:userId', function (req, res) {
 
 app.post('/user/subscriptions', function (req, res) {
   adminService.subscribe(req.body).then(function (response) {
-    res.send(response)
+    res.sendStatus(response)
   })
 })
 
+// this route is the current one im working on
 app.put('/user/subscriptions', function (req, res) {
   adminService.updateSubscription(req.body).then(function (response) {
-    res.send(response)
+    res.sendStatus(response)
   })
 })
 
 app.delete('/user/subscriptions', function (req, res) {
   adminService.unsubscribe(req.body).then(function (response) {
-    res.send(response)
+    res.sendStatus(response)
   })
 })
 
 app.get('/user/subscriptions/:user/:player', function (req, res) {
   adminService.amISubscribed(req.params.user, req.params.player).then(function (response) {
-    res.send(response)
+    if (response === 404) {
+      res.sendStatus(response)
+    } else {
+      res.status(200).send(response)
+    }
   })
 })
 
@@ -134,7 +135,7 @@ app.get('/user/matches/:userId', function (req, res) {
 })
 
 app.get('/user/participants/:uid/:local/:visitor', function (req, res) {
-  adminService.getParticipants(req.params.uid, req.params.local, req.params.visitor).then(function (participants) {
+  adminService.participants(req.params.uid, req.params.local, req.params.visitor).then(function (participants) {
     res.send(participants)
   })
 })
