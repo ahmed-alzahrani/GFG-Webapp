@@ -243,3 +243,5 @@ __24/08/18__
 __29/09/18__
 
 - Added route for removing a user profile from Firestore
+
+- Updated Swagger docs with new route

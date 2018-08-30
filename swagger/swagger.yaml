@@ -1,10 +1,14 @@
 swagger: '2.0'
 info:
   description: >-
-    This is the API documentation for the Goals for Good Web Application. More information can be discovered by viewing the repo on [Github](https://github.com/ahmed-alzahrani/GFG-Webapp). You may also view the repo for the mobile client built using the Flutter SDK [here](https://github.com/ahmed-alzahrani/GFG-Client).
+    This is the API documentation for the Goals for Good Web Application. More
+    information can be discovered by viewing the repo on
+    [Github](https://github.com/ahmed-alzahrani/GFG-Webapp). You may also view
+    the repo for the mobile client built using the Flutter SDK
+    [here](https://github.com/ahmed-alzahrani/GFG-Client).
   version: 1.0.0
   title: Goals For Good Server
-host: localhost:8080
+host: 'localhost:8080'
 tags:
   - name: Player
     description: Operations concerning player information.
@@ -36,7 +40,7 @@ paths:
               $ref: '#/definitions/Player'
         '500':
           description: Internal Server Error
-  /'player/matches/{teamId}':
+  '/''player/matches/{teamId}''':
     get:
       tags:
         - Player
@@ -120,7 +124,7 @@ paths:
           description: successful operation
         '404':
           description: UID or Email is missing
-  /'user/profile/{uid}':
+  '/''user/profile/{uid}''':
     get:
       tags:
         - User
@@ -173,6 +177,21 @@ paths:
           description: successful operation
         '404':
           description: Not Found
+    delete:
+      tags:
+        - User
+      summary: Updates a user profile
+      parameters:
+        - name: uid
+          in: path
+          description: user id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+        '404':
+          description: Not found
   /user/subscriptions:
     post:
       tags:
@@ -313,7 +332,9 @@ paths:
     get:
       tags:
         - User
-      summary: Retrieves all matches involving a user's subscription players for the next month
+      summary: >-
+        Retrieves all matches involving a user's subscription players for the
+        next month
       parameters:
         - name: uid
           in: path
@@ -322,7 +343,9 @@ paths:
           type: string
       responses:
         '200':
-          description: successful operation (empty array if user not found or no matches found)
+          description: >-
+            successful operation (empty array if user not found or no matches
+            found)
           schema:
             type: array
             items:
@@ -331,7 +354,9 @@ paths:
     get:
       tags:
         - User
-      summary: Retrieves all players a user is subcribed to participating in a specific match
+      summary: >-
+        Retrieves all players a user is subcribed to participating in a specific
+        match
       parameters:
         - name: uid
           in: path
@@ -361,7 +386,7 @@ definitions:
     properties:
       birthday:
         type: string
-        example: '11/26/2018'
+        example: 11/26/2018
       country:
         type: string
         example: Canada
@@ -438,10 +463,12 @@ definitions:
         example: 0009
       description:
         type: string
-        example: Unicef works in 190 countries and territories to save the lives of children
+        example: >-
+          Unicef works in 190 countries and territories to save the lives of
+          children
       website:
         type: string
-        example: https://www.unicef.org
+        example: 'https://www.unicef.org'
       imagePath:
         type: string
         example: assets/images/charities/Unicef.png
@@ -456,7 +483,7 @@ definitions:
         example: 158575
       name:
         type: string
-        example: 'H. Kane'
+        example: H. Kane
       age:
         type: integer
         example: 25
@@ -525,10 +552,10 @@ definitions:
         example: FT
       timer:
         type: string
-        example: ""
+        example: ''
       time:
         type: string
-        example: 14:00
+        example: 840
       localteam_id:
         type: integer
         example: 9406
@@ -555,13 +582,13 @@ definitions:
         example: '[3-1]'
       et_score:
         type: string
-        example:
+        example: null
       penalty_local:
         type: string
-        example:
+        example: null
       penalty_visitor:
         type: string
-        example:
+        example: null
       events:
         type: array
         items:
@@ -580,7 +607,7 @@ definitions:
         example: 43
       extra_min:
         type: string
-        example: ""
+        example: ''
       team:
         type: string
         example: localteam
@@ -592,10 +619,10 @@ definitions:
         example: 141970
       assist:
         type: string
-        example: ""
+        example: ''
       assist_id:
         type: integer
-        example:
+        example: null
       result:
         type: string
         example: '[1-0]'

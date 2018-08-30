@@ -264,6 +264,29 @@
             "description": "Not Found"
           }
         }
+      },
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Updates a user profile",
+        "parameters": [
+          {
+            "name": "uid",
+            "in": "path",
+            "description": "user id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
       }
     },
     "/user/subscriptions": {
