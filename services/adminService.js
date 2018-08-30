@@ -17,6 +17,7 @@ exports.db = db
 exports.addUser = AddUser
 
 exports.getProfile = GetProfile
+exports.deleteProfile = DeleteProfile
 exports.updateProfile = UpdateProfile
 
 exports.subscriptions = Subscriptions
@@ -75,6 +76,19 @@ function GetProfile (uid) {
     } else {
       return { code: 404 }
     }
+  })
+  return response
+}
+
+function DeleteProfile (uid) {
+  if (uid == null) {
+    return 404
+  }
+  let response = db.collection('users').doc(uid).delete().then(function () {
+    return 200
+  }).catch(function (err) {
+    console.log('error trying to delete the user: ', err)
+    return 404
   })
   return response
 }
@@ -166,6 +180,7 @@ function Subscribe (request) {
   return response
 }
 
+// just so i can find this func
 // removes a users' subscription based on the player id in the request body
 function Unsubscribe (request) {
   if (request.uid == null || request.playerId == null) {

@@ -70,6 +70,13 @@ app.get('/user/profile/:uid', function (req, res) {
   })
 })
 
+app.delete('/user/profile/:uid', function (req, res) {
+  adminService.deleteProfile(req.params.uid).then(function (result) {
+    console.log('rerturning result of profile deletion: ', result)
+    res.sendStatus(result)
+  })
+})
+
 app.put('/user/profile/:uid', function (req, res) {
   adminService.updateProfile(req.body, req.params.uid).then(function (response) {
     if (response.code === 200) {

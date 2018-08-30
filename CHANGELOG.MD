@@ -239,3 +239,7 @@ __24/08/18__
 - finished tweaking responses on all routes
 
 - refactored handleGoal and updateStats from adminService --> scheduleService and re-factored adminService
+
+__29/09/18__
+
+- Added route for removing a user profile from Firestore
