@@ -4,7 +4,7 @@ let bodyParser = require('body-parser')
 let fs = require('fs')
 
 let swaggerUi = require('swagger-ui-express')
-let swaggerDoc = require('./swagger/swagger.json')
+let swaggerDoc = require('./documentation/swagger/swagger.json')
 
 let adminService = require('./services/adminService.js')
 let playerService = require('./services/playerService.js')
@@ -142,6 +142,7 @@ app.get('/user/matches/:userId', function (req, res) {
 })
 
 app.get('/user/participants/:uid/:local/:visitor', function (req, res) {
+  console.log('about to query participants')
   adminService.participants(req.params.uid, req.params.local, req.params.visitor).then(function (participants) {
     res.send(participants)
   })
