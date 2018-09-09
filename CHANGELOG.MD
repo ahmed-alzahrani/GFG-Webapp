@@ -245,3 +245,9 @@ __29/09/18__
 - Added route for removing a user profile from Firestore
 
 - Updated Swagger docs with new route
+
+__09/09/18__
+
+- Began fixing async handling of goals, need to specifically dive into ParseEvents and fix updating of stats in a case where multiple goals are scored, stats need to be updated at a higher scope
+
+- Implemented progress bars for population of leagues and players

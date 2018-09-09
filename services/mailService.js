@@ -30,7 +30,8 @@ function sendGoalEmail (recipient, charity, scorer) {
 
   transporter.sendMail(helperOptions, (error, info) => {
     if (error) console.log(error)
-    console.log('confirmation email sent')
+    console.log('confirmation e-mail sent:')
     console.log(info)
+    console.log()
   })
 }

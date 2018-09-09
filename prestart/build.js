@@ -1,6 +1,7 @@
 let config = require('../config/config.js')
 let fetch = require('node-fetch')
 let fs = require('fs')
+let ProgressBar = require('progress')
 
 let charitiesStore = require('json-fs-store')('./Resources/Charities')
 let countriesStore = require('json-fs-store')('./Resources/Countries')
@@ -81,6 +82,7 @@ async function buildCompetitions () {
 }
 
 async function buildStandings (data) {
+  var bar = new ProgressBar('Populating Leagues: :bar :percent', { total: ids.length })
   var count = 0
   for (var i = 0; i < data.length; i++) {
     let competition = data[i]
@@ -98,6 +100,7 @@ async function buildStandings (data) {
       standingsStore.add(obj, function (err) {
         if (err) throw err
         count += 1
+        bar.tick()
         if (count === ids.length) {
           buildTeams()
         }
@@ -107,6 +110,7 @@ async function buildStandings (data) {
 }
 
 async function buildTeams () {
+  var bar = new ProgressBar('Populating Teams: :bar :percent', { total: teamCount })
   competitionStore.load('competitions', function (err, object) {
     if (err) throw err
     let comps = object.competitions
@@ -136,7 +140,7 @@ async function buildTeams () {
             teamStore.add(obj, function (err) {
               if (err) throw err
               count += 1
-              console.log(count)
+              bar.tick()
               if (count === teamCount) {
                 buildPlayers()
               }
