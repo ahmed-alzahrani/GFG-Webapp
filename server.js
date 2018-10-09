@@ -5,7 +5,7 @@ let scheduleService = require('./services/scheduleService.js')
 app.listen(8080, function () {
   console.log('Listening on port 8080!')
 
-  let liveMatchesJob = new cron.CronJob('0 */20 * * * *', scheduleService.checkLiveMatches)
+  let liveMatchesJob = new cron.CronJob('0 */45 * * * *', scheduleService.checkLiveMatches)
   let teamsJob = new cron.CronJob('0 0 2 * * *', scheduleService.checkTeams)
 
   liveMatchesJob.start()
