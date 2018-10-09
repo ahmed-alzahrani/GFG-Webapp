@@ -11,6 +11,10 @@ admin.initializeApp({
 })
 
 let db = admin.firestore()
+const settings = {timestampsInSnapshots: true}
+db.settings(settings)
+
+// PUBLIC API
 
 exports.db = db
 
@@ -29,6 +33,8 @@ exports.updateSubscription = UpdateSubscription
 exports.getTeamIds = GetTeamIds
 exports.getMatches = GetMatches
 exports.participants = Participants
+
+// PRIVATE IMPLEMENTATION
 
 // writes a new user object into the Firebase Firestore NoSQL database based on the auth user created
 function AddUser (user) {
