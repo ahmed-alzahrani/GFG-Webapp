@@ -2,16 +2,18 @@ let config = require('../config/config.js')
 let fetch = require('node-fetch')
 let fs = require('fs')
 let ProgressBar = require('progress')
+let adminService = require('../services/adminService.js')
 
-let charitiesStore = require('json-fs-store')('./Resources/Charities')
-let countriesStore = require('json-fs-store')('./Resources/Countries')
-let matchesStore = require('json-fs-store')('./Resources/Matches')
-let competitionStore = require('json-fs-store')('./Resources/Competitions')
-let standingsStore = require('json-fs-store')('./Resources/Standings')
-let teamStore = require('json-fs-store')('./Resources/Teams')
-let playerStore = require('json-fs-store')('./Resources/Players')
+// let charitiesStore = require('json-fs-store')('./Resources/Charities')
+// let countriesStore = require('json-fs-store')('./Resources/Countries')
+// let matchesStore = require('json-fs-store')('./Resources/Matches')
+// let competitionStore = require('json-fs-store')('./Resources/Competitions')
+// let standingsStore = require('json-fs-store')('./Resources/Standings')
+// let teamStore = require('json-fs-store')('./Resources/Teams')
+// let playerStore = require('json-fs-store')('./Resources/Players')
 
 let ids = config.competitionIds
+var squadCount = 0
 var teamCount = 0
 
 exports.build = function () {
@@ -20,49 +22,26 @@ exports.build = function () {
 
 function createCharities () {
   let charities = JSON.parse(fs.readFileSync('config/charities.json', 'utf8'))
-  let obj = {
-    id: 'charities',
-    charities: charities
+  for (var i = 0; i < charities.length; i++) {
+    adminService.db.collection('charities').doc(charities[i].id).set(charities[i]).then(function () {
+    }).catch(function (err) {
+      if (err) throw err
+    })
   }
-
-  charitiesStore.add(obj, function (err) {
-    if (err) throw err
-    buildMatches()
-  })
-}
-
-function buildMatches () {
-  let obj = {
-    id: 'matches',
-    matches: []
-  }
-
-  matchesStore.add(obj, function (err) {
-    if (err) throw err
-    buildCountries()
-  })
+  buildCountries()
 }
 
 async function buildCountries () {
   let url = 'https://restcountries.eu/rest/v2/all'
-  var countries = []
   let response = await fetch(url)
   let data = await response.json()
   for (var i = 0; i < data.length; i++) {
-    let name = data[i].name
-    if (name.length <= 40) { // adjust length of countries here
-      countries.push(name)
+    if (data[i].name.length <= 40 && data[i].numericCode != null) { // adjust length of countries here
+      adminService.db.collection('countries').doc(data[i].numericCode).set({name: data[i].name})
     }
   }
-  let obj = {
-    id: 'countries',
-    countries: countries
-  }
 
-  await countriesStore.add(obj, function (err) {
-    if (err) throw err
-    buildCompetitions()
-  })
+  buildCompetitions()
 }
 
 async function buildCompetitions () {
@@ -70,15 +49,17 @@ async function buildCompetitions () {
   let response = await fetch(url)
   let data = await response.json()
 
-  let obj = {
-    id: 'competitions',
-    competitions: data
+  console.log('competition data is: ')
+  console.log(data)
+
+  for (var i = 0; i < data.length; i++) {
+    adminService.db.collection('competitions').doc(data[i].id).set(data[i]).then(function () {
+    }).catch(function (err) {
+      if (err) throw err
+    })
   }
 
-  competitionStore.add(obj, function (err) {
-    if (err) throw err
-    buildStandings(data)
-  })
+  buildStandings(data)
 }
 
 async function buildStandings (data) {
@@ -92,113 +73,76 @@ async function buildStandings (data) {
       let res = await fetch(url)
       let json = await res.json()
 
-      let obj = {
-        id: competition.name,
-        standings: json
+      for (var x = 0; x < json.length; x++) {
+        adminService.db.collection('standings').doc(competition.id).set({name: competition.name})
+        adminService.db.collection('standings').doc(competition.id).collection('teams').doc(json[x].team_id).set(json[x])
+        teamCount += 1
       }
-      teamCount += obj.standings.length
-      standingsStore.add(obj, function (err) {
-        if (err) throw err
-        count += 1
-        bar.tick()
-        if (count === ids.length) {
-          buildTeams()
-        }
-      })
+      count += 1
+      bar.tick()
+      if (count === ids.length) {
+        buildTeams()
+      }
     }
   }
 }
 
 async function buildTeams () {
   var bar = new ProgressBar('Populating Teams: :bar :percent', { total: teamCount })
-  competitionStore.load('competitions', function (err, object) {
-    if (err) throw err
-    let comps = object.competitions
-    for (var i = 0; i < comps.length; i++) {
-      let competition = comps[i]
-      if (ids.indexOf(competition.id) > -1) {
-        standingsStore.load(competition.name, async function (err, object) {
-          if (err) throw err
-          let standings = object.standings
-          let leagueName = object.id
-          // loop through each team in the competition
-          var count = 0
-          for (var i = 0; i < standings.length; i++) {
-            let team = standings[i]
-            let url = config.baseUrl + 'team/' + team.team_id + '?Authorization=' + config.apiKey
-
-            let response = await fetch(url)
-            let data = await response.json()
-
-            let obj = {
-              id: team.team_name,
-              team_id: team.team_id,
-              league: leagueName,
-              squad: data.squad
-            }
-            // write the info about that team we receive to /Resources/Teams
-            teamStore.add(obj, function (err) {
-              if (err) throw err
-              count += 1
-              bar.tick()
-              if (count === teamCount) {
-                buildPlayers()
-              }
-            })
-          }
+  var standingsRef = adminService.db.collection('standings')
+  standingsRef.get().then(snapshot => {
+    snapshot.forEach(doc => {
+      var teamsRef = adminService.db.collection('standings').doc(doc.id).collection('teams')
+      teamsRef.get().then(snapshot => {
+        snapshot.forEach(doc => {
+          let url = config.baseUrl + 'team/' + doc.id + '?Authorization=' + config.apiKey
+          writeSquad(url, bar)
         })
-      }
-    }
+      })
+    })
+  }).catch(err => {
+    console.log('Error getting documents', err)
   })
 }
 
+async function writeSquad (url, bar) {
+  let response = await fetch(url)
+  let data = await response.json()
+
+  adminService.db.collection('squads').doc(data.team_id).set({
+    name: data.name,
+    country: data.country,
+    founded: data.founded,
+    leagues: data.leagues,
+    venue_name: data.venue_name,
+    venue_id: data.venue_id,
+    venue_surface: data.venue_surface,
+    venue_address: data.venue_address,
+    venue_city: data.venue_city,
+    venue_capacity: data.venue_capacity,
+    coach_name: data.coach_name,
+    coach_id: data.coach_id,
+    squad: data.squad
+  })
+
+  squadCount += 1
+  bar.tick()
+  if (squadCount === teamCount) {
+    buildPlayers()
+  }
+}
+
 function buildPlayers () {
-  let playerArr = []
-  teamStore.list(function (err, objects) {
-    if (err) throw err
-    for (var i = 0; i < objects.length; i++) {
-    // we extract info that we want accesible to our player from the teams
-      let squad = objects[i].squad
-      let teamName = objects[i].id
-      let teamId = objects[i].team_id
-      let league = objects[i].league
-      for (var x = 0; x < squad.length; x++) {
-        let player = squad[x]
-
-        // edit some player info before we add it to our array
-        if (player.number === '') {
-          player.number = '0'
-        }
-
-        switch (player.position) {
-          case 'G':
-            player.position = 'Goalkeeper'
-            break
-
-          case 'D':
-            player.position = 'Defender'
-            break
-
-          case 'M':
-            player.position = 'Midfielder'
-            break
-
-          case 'A':
-            player.position = 'Attacker'
-            break
-        }
-        player.team = teamName
-        player.team_id = teamId
-        player.league = league
-        playerArr.push(player)
+  console.log('building players')
+  var squadsRef = adminService.db.collection('squads')
+  squadsRef.get().then(snapshot => {
+    snapshot.forEach(doc => {
+      // console.log(doc.data())
+      for (var i = 0; i < doc.data().squad.length; i++) {
+        adminService.db.collection('players').doc(doc.data().squad[i].id).set(doc.data().squad[i])
       }
-    }
-    // send the player array to be written in JSON in the proper Resource folder
-    let obj = {
-      id: 'players',
-      players: playerArr
-    }
-    playerStore.add(obj, function (err) { if (err) throw err })
-    console.log('number of players is... ' + playerArr.length)
+    })
+  }).catch(err => {
+    console.log('Error getting documents', err)
   })
 }

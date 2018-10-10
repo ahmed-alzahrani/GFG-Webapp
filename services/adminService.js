@@ -11,8 +11,11 @@ admin.initializeApp({
 })
 
 let db = admin.firestore()
+
+/*
 const settings = {timestampsInSnapshots: true}
 db.settings(settings)
+*/
 
 // PUBLIC API
 

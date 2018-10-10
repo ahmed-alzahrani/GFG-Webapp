@@ -9,6 +9,9 @@ let swaggerDoc = require('./documentation/swagger/swagger.json')
 let adminService = require('./services/adminService.js')
 let playerService = require('./services/playerService.js')
 
+let authController = require('./auth/AuthController.js')
+app.use('/auth', authController)
+
 app.use(bodyParser.json())
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc))
 
