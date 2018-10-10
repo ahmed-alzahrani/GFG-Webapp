@@ -82,7 +82,6 @@ function UpdateProfile (request, uid) {
     country: request.country
   }
   let response = db.collection('users').doc(uid).update(obj).then(function () {
-    console.log('success')
     return { code: 200, response: 'successfully updated profile' }
   }).catch(function (err) {
     console.log('Error updating profile: ', err)
@@ -133,8 +132,8 @@ function AmISubscribed (uid, playerId) {
 }
 
 // adds a users' subscription based on the info provided in the request body
-function Subscribe (request) {
-  if (request.name == null || request.team == null || request.teamName == null || request.charityName == null || request.charityId == null || request.uid == null || request.playerId == null) {
+function Subscribe (request, uid) {
+  if (request.name == null || request.team == null || request.teamName == null || request.charityName == null || request.charityId == null || uid == null || request.playerId == null) {
     return 404
   }
   let timestamp = new Date()
@@ -150,7 +149,7 @@ function Subscribe (request) {
     time: timeString
   }
 
-  let response = db.collection('users').doc(request.uid).collection('subscriptions').doc(request.playerId).set(obj).then(function () {
+  let response = db.collection('users').doc(uid).collection('subscriptions').doc(request.playerId).set(obj).then(function () {
     return 200
   }).catch(function (err) {
     console.log('error, invalid request param: ', err)
@@ -161,11 +160,11 @@ function Subscribe (request) {
 
 // just so i can find this func
 // removes a users' subscription based on the player id in the request body
-function Unsubscribe (request) {
-  if (request.uid == null || request.playerId == null) {
+function Unsubscribe (request, uid) {
+  if (uid == null || request.playerId == null) {
     return 404
   }
-  let response = db.collection('users').doc(request.uid).collection('subscriptions').doc(request.playerId).delete().then(function () {
+  let response = db.collection('users').doc(uid).collection('subscriptions').doc(request.playerId).delete().then(function () {
     return 200
   }).catch(function (err) {
     console.log('error trying to delete the subscription: ', err)
@@ -174,15 +173,15 @@ function Unsubscribe (request) {
   return response
 }
 
-function UpdateSubscription (request) {
-  if (request.uid == null || request.playerId == null || request.charityName == null || request.charityId == null) {
+function UpdateSubscription (request, uid) {
+  if (uid == null || request.playerId == null || request.charityName == null || request.charityId == null) {
     return 404
   }
   let obj = {
     charity: request.charityName,
     charityId: request.charityId
   }
-  let response = db.collection('users').doc(request.uid).collection('subscriptions').doc(request.playerId).update(obj).then(function () {
+  let response = db.collection('users').doc(uid).collection('subscriptions').doc(request.playerId).update(obj).then(function () {
     return 200
   }).catch(function (err) {
     console.log('error updating subscription: ', err)

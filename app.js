@@ -7,7 +7,6 @@ let swaggerUi = require('swagger-ui-express')
 let swaggerDoc = require('./documentation/swagger/swagger.json')
 
 let adminService = require('./services/adminService.js')
-let playerService = require('./services/playerService.js')
 
 let authController = require('./auth/AuthController.js')
 app.use('/auth', authController)
@@ -18,27 +17,47 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc))
 // set up our routes
 
 // Return the player json information
-app.get('/player/all', function (req, res) {
-  let players = playerService.players()
-  if (players.length > 0) {
-    res.status(200).send(players)
-  } else {
-    res.sendStatus(500)
-  }
-})
-
-app.get('/player/:playerId', function (req, res) {
-  playerService.player(req.params.playerId).then(function (player) {
-    res.send(player)
+app.get('/player/all', VerifyToken, function (req, res) {
+  var response = []
+  adminService.db.collection('squads').get().then(snapshot => {
+    snapshot.forEach(doc => {
+      for (var i = 0; i < doc.data().squad.length; i++) {
+        var obj = doc.data().squad[i]
+        obj.teamName = doc.data().name
+        obj.teamId = doc.id
+        response.push(obj)
+      }
+    })
+    res.status(200).send(response)
+  }).catch(err => {
+    res.status(500).send('error getting players: ', err)
   })
 })
 
-app.get('/player/matches/:teamId', function (req, res) {
+app.get('/player/:playerId', VerifyToken, function (req, res) {
+  adminService.db.collection('squads').get().then(snapshot => {
+    snapshot.forEach(doc => {
+      for (var i = 0; i < doc.data().squad.length; i++) {
+        if (doc.data().squad[i].id === req.params.playerId) {
+          var obj = doc.data().squad[i]
+          obj.teamName = doc.data().name
+          obj.teamId = doc.id
+          res.status(200).send(obj)
+        }
+      }
+    })
+    res.status(404).send('player not found')
+  }).catch(err => {
+    res.status(500).send('error getting players: ', err)
+  })
+})
+
+app.get('/player/matches/:teamId', VerifyToken, function (req, res) {
   adminService.getMatches([req.params.teamId]).then(function (matches) {
     if (matches.length > 0) {
       res.status(200).send(matches)
     } else {
-      res.sendStatus(404)
+      res.status(404).send()
     }
   })
 })
@@ -67,8 +86,8 @@ app.get('/charities', VerifyToken, function (req, res) {
   })
 })
 
-app.get('/user/profile/:uid', function (req, res) {
-  adminService.getProfile(req.params.uid).then(function (profile) {
+app.get('/user/profile', VerifyToken, function (req, res) {
+  adminService.getProfile(req.userId).then(function (profile) {
     if (profile.code === 404) {
       res.sendStatus(404)
     } else {
@@ -77,15 +96,14 @@ app.get('/user/profile/:uid', function (req, res) {
   })
 })
 
-app.delete('/user/profile/:uid', function (req, res) {
-  adminService.deleteProfile(req.params.uid).then(function (result) {
-    console.log('rerturning result of profile deletion: ', result)
+app.delete('/user/profile', VerifyToken, function (req, res) {
+  adminService.deleteProfile(req.userId).then(function (result) {
     res.sendStatus(result)
   })
 })
 
-app.put('/user/profile/:uid', function (req, res) {
-  adminService.updateProfile(req.body, req.params.uid).then(function (response) {
+app.put('/user/profile', VerifyToken, function (req, res) {
+  adminService.updateProfile(req.body, req.userId).then(function (response) {
     if (response.code === 200) {
       res.status(200).send(response.response)
     } else {
@@ -95,8 +113,8 @@ app.put('/user/profile/:uid', function (req, res) {
   })
 })
 
-app.get('/user/subscriptions/:userId', function (req, res) {
-  adminService.subscriptions(req.params.userId).then(function (response) {
+app.get('/user/subscriptions', VerifyToken, function (req, res) {
+  adminService.subscriptions(req.userId).then(function (response) {
     if (response.length > 0) {
       res.status(200).send(response)
     } else {
@@ -105,27 +123,27 @@ app.get('/user/subscriptions/:userId', function (req, res) {
   })
 })
 
-app.post('/user/subscriptions', function (req, res) {
-  adminService.subscribe(req.body).then(function (response) {
-    res.sendStatus(response)
+app.post('/user/subscriptions', VerifyToken, function (req, res) {
+  adminService.subscribe(req.body, req.userId).then(function (response) {
+    res.status(response).send()
   })
 })
 
 // this route is the current one im working on
-app.put('/user/subscriptions', function (req, res) {
-  adminService.updateSubscription(req.body).then(function (response) {
+app.put('/user/subscriptions', VerifyToken, function (req, res) {
+  adminService.updateSubscription(req.body, req.userId).then(function (response) {
     res.sendStatus(response)
   })
 })
 
-app.delete('/user/subscriptions', function (req, res) {
-  adminService.unsubscribe(req.body).then(function (response) {
+app.delete('/user/subscriptions', VerifyToken, function (req, res) {
+  adminService.unsubscribe(req.body, req.userId).then(function (response) {
     res.sendStatus(response)
   })
 })
 
-app.get('/user/subscriptions/:user/:player', function (req, res) {
-  adminService.amISubscribed(req.params.user, req.params.player).then(function (response) {
+app.get('/user/subscriptions/:player', VerifyToken, function (req, res) {
+  adminService.amISubscribed(req.userId, req.params.player).then(function (response) {
     if (response === 404) {
       res.sendStatus(response)
     } else {
@@ -134,17 +152,16 @@ app.get('/user/subscriptions/:user/:player', function (req, res) {
   })
 })
 
-app.get('/user/matches/:userId', function (req, res) {
-  adminService.getTeamIds(req.params.userId).then(function (ids) {
+app.get('/user/matches', VerifyToken, function (req, res) {
+  adminService.getTeamIds(req.userId).then(function (ids) {
     adminService.getMatches(ids).then(function (matches) {
       res.send(matches)
     })
   })
 })
 
-app.get('/user/participants/:uid/:local/:visitor', function (req, res) {
-  console.log('about to query participants')
-  adminService.participants(req.params.uid, req.params.local, req.params.visitor).then(function (participants) {
+app.get('/user/participants/:local/:visitor', VerifyToken, function (req, res) {
+  adminService.participants(req.userId, req.params.local, req.params.visitor).then(function (participants) {
     res.send(participants)
   })
 })

@@ -5,7 +5,6 @@ let ProgressBar = require('progress')
 let adminService = require('../services/adminService.js')
 
 let ids = config.competitionIds
-var squadCount = 0
 var teamCount = 0
 
 exports.build = function () {
@@ -116,14 +115,10 @@ async function writeSquad (url, bar) {
     coach_id: data.coach_id,
     squad: data.squad
   })
-
-  squadCount += 1
   bar.tick()
-  if (squadCount === teamCount) {
-    buildPlayers()
-  }
 }
 
+/*
 function buildPlayers () {
   console.log('building players')
   var squadsRef = adminService.db.collection('squads')
@@ -138,3 +133,4 @@ function buildPlayers () {
     console.log('Error getting documents', err)
   })
 }
+*/
