@@ -5,7 +5,6 @@ var bodyParser = require('body-parser')
 router.use(bodyParser.urlencoded({ extended: false }))
 router.use(bodyParser.json())
 
-// let uuidv1 = require('uuid/v1')
 let jwt = require('jsonwebtoken')
 let bcrypt = require('bcryptjs')
 let config = require('../config/config.js')
