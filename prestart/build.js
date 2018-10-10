@@ -4,14 +4,6 @@ let fs = require('fs')
 let ProgressBar = require('progress')
 let adminService = require('../services/adminService.js')
 
-// let charitiesStore = require('json-fs-store')('./Resources/Charities')
-// let countriesStore = require('json-fs-store')('./Resources/Countries')
-// let matchesStore = require('json-fs-store')('./Resources/Matches')
-// let competitionStore = require('json-fs-store')('./Resources/Competitions')
-// let standingsStore = require('json-fs-store')('./Resources/Standings')
-// let teamStore = require('json-fs-store')('./Resources/Teams')
-// let playerStore = require('json-fs-store')('./Resources/Players')
-
 let ids = config.competitionIds
 var squadCount = 0
 var teamCount = 0

@@ -1,7 +1,7 @@
 let express = require('express')
 const app = express()
 let bodyParser = require('body-parser')
-let fs = require('fs')
+let VerifyToken = require('./auth/VerifyToken.js')
 
 let swaggerUi = require('swagger-ui-express')
 let swaggerDoc = require('./documentation/swagger/swagger.json')
@@ -43,24 +43,28 @@ app.get('/player/matches/:teamId', function (req, res) {
   })
 })
 
-app.get('/countries', function (req, res) {
-  try {
-    var obj = JSON.parse(fs.readFileSync('Resources/Countries/countries.json', 'utf8'))
-    res.status(200).send(obj.countries)
-  } catch (err) {
-    console.log('error retrieving countries: ', err)
-    res.sendStatus(500)
-  }
+app.get('/countries', VerifyToken, function (req, res) {
+  var response = []
+  adminService.db.collection('countries').get().then(snapshot => {
+    snapshot.forEach(doc => {
+      response.push({id: doc.id, name: doc.data().name})
+    })
+    res.status(200).send(response)
+  }).catch(err => {
+    res.status(500).send('error getting countries: ', err)
+  })
 })
 
-app.get('/charities', function (req, res) {
-  try {
-    var obj = JSON.parse(fs.readFileSync('Resources/Charities/charities.json', 'utf8'))
-    res.status(200).send(obj.charities)
-  } catch (err) {
-    console.log('error retrieving charities: ', err)
-    res.sendStatus(500)
-  }
+app.get('/charities', VerifyToken, function (req, res) {
+  var response = []
+  adminService.db.collection('charities').get().then(snapshot => {
+    snapshot.forEach(doc => {
+      response.push(doc.data())
+    })
+    res.status(200).send(response)
+  }).catch(err => {
+    res.status(500).send('error getting charities: ', err)
+  })
 })
 
 app.get('/user/profile/:uid', function (req, res) {
@@ -88,12 +92,6 @@ app.put('/user/profile/:uid', function (req, res) {
       console.log('404')
       res.sendStatus(404)
     }
-  })
-})
-
-app.post('/user/profile', function (req, res) {
-  adminService.addUser(req.body).then(function (response) {
-    res.sendStatus(response)
   })
 })
 
