@@ -2,9 +2,9 @@ let fetch = require('node-fetch')
 let config = require('../config/config.js')
 let build = require('../prestart/build.js')
 let admin = require('../services/adminService.js')
-let fs = require('fs')
+// let fs = require('fs')
 let mailService = require('../services/mailService.js')
-let matchesStore = require('json-fs-store')('./Resources/Matches')
+// let matchesStore = require('json-fs-store')('./Resources/Matches')
 // let url = config.baseUrl + 'matches?Authorization=' + config.apiKey // <--- URL for actual live matches
 let url = 'http://api.football-api.com/2.0/matches/?team_id=9406&from_date=21.06.2017&to_date=21.09.2017&Authorization=' + config.apiKey // url for testing specific string of spurs games during dev
 
@@ -19,7 +19,7 @@ exports.checkTeams = function () {
 // Check for live matches should occur every 5 mins
 
 exports.checkLiveMatches = async function () {
-  console.log('checking live matches')
+  console.log('checking live matches... ')
   let res = await MakeApiCall(url) // gets the raw live match JSON data
   HandleLiveMatches(res) // Handles the live matches result
 }
@@ -41,16 +41,8 @@ function HandleLiveMatches (data) {
   }
   if (data.code === 404) {
     console.log('got a 404 back')
-    let obj = {
-      id: 'matches',
-      matches: []
-    }
-    matchesStore.add(obj, function (err) {
-      if (err) throw err
-      else {
-        console.log('successfully reset live matches to an empty array!')
-      }
-    })
+    // empty the collection of matches
+    db.collection('matches').get().then(snapshot => { snapshot.forEach(doc => { doc.delete() }) }).catch(err => { console.log('error getting documents', err) })
     return data.message
   }
   RemoveDeprecatedMatches(data)
@@ -58,108 +50,63 @@ function HandleLiveMatches (data) {
 }
 
 function RemoveDeprecatedMatches (data) {
-  var matches = JSON.parse(fs.readFileSync('Resources/Matches/matches.json', 'utf8')).matches
-  for (var i = 0; i < matches.length; i++) {
-    var live = false
-    for (var j = 0; j < data.length; j++) {
-      if (matches[i].id === data[j].id) {
-        live = true
-        break
+  console.log('checking for deprecated matches... ')
+  db.collection('matches').get().then(snapshot => {
+    snapshot.forEach(doc => {
+      var live = false
+      for (var i = 0; i < data.length; i++) {
+        if (doc.id === data[i].id) {
+          live = true
+          break
+        }
       }
-    }
-    if (!live) {
-      matches.pop(matches[i])
-      i -= 1
-    }
-  }
-  let obj = {
-    id: 'matches',
-    matches: matches
-  }
-  matchesStore.add(obj, function (err) {
-    if (err) throw err
-    else {
-      console.log('successfully trimmed deprecated matches')
-    }
+      if (!live) doc.delete()
+    })
   })
 }
 
-// Goes through live matches and removes ones that aren't
 function UpdateLiveMatches (data) {
-  var matches = JSON.parse(fs.readFileSync('Resources/Matches/matches.json', 'utf8')).matches
+  console.log('updating live matches... ')
   for (var i = 0; i < data.length; i++) {
-    var exists = false
-    for (var j = 0; j < matches.length; j++) {
-      if (data[i].id === matches[j].id) {
-        exists = true
-        break
-      }
-    }
-    if (!exists) matches.push(trimMatch(data[i]))
-  }
-  let obj = {
-    id: 'matches',
-    matches: matches
-  }
-  matchesStore.add(obj, function (err) {
-    if (err) throw err
-    else {
-      console.log('successfully updated live matches!')
-      UpdateEvents(data)
-    }
-  })
-}
+    db.collection('matches').doc(data[i].id).get().then(doc => {
+      if (!doc.exists) {
+        i -= 1
 
-// Check for actual new events that have occurred in the game
-function UpdateEvents (data) {
-  var matches = JSON.parse(fs.readFileSync('Resources/Matches/matches.json', 'utf8'))
-  matches = matches.matches
+        let match = trimMatch(data[i])
+        // trim all goals and handle them, all goals in the match are new
+        for (var x = 0; x < match.events.length; x++) {
+          match.events[x] = trimEvent(match.events[x])
+          if (match.events[x].type === 'goal') handleGoal(match.events[x].playerId)
+        }
+        db.collection('matches').doc(data[i].id).set(match)
+      } else {
+        i -= 1
+        // document exists: CHECK EVENTS
+        let storedEvents = doc.data().events
+        let events = data[i].events
+        for (var y = 0; y < events.length; y++) {
+          events[y] = trimEvent(events[y])
+          // this part needs to work
 
-  for (var i = 0; i < data.length; i++) {
-    let liveMatchId = data[i].id
-    let events = data[i].events
-    for (var j = 0; j < matches.length; j++) {
-      if (matches[i].id === liveMatchId) {
-        matches[i].events = ParseEvents(matches[i].events, events)
+          var exists = false
+          for (var z = 0; z < storedEvents.length; z++) {
+            if (storedEvents[z].id === events[y].id) {
+              exists = true
+              break
+            }
+          }
+          if (!exists) {
+            storedEvents.push(events)
+          }
+        }
+        var docRef = db.collection('matches').doc(data[i].id)
+        docRef.update({ events: storedEvents })
       }
-    }
+    }).catch(err => {
+      console.log('Error getting document: ', err)
+    })
   }
-  let obj = {
-    id: 'matches',
-    matches: matches
-  }
-  matchesStore.add(obj, function (err) {
-    if (err) throw err
-    else {
-      console.log('successfully updated live match events!')
-    }
-  })
-}
-
-function ParseEvents (storedEvents, events) {
-  console.log('lets see the stored events: ', storedEvents)
-  console.log()
-  console.log('lets see the events: ', events)
-  var newGoals = []
-  for (var i = 0; i < events.length; i++) {
-    var exists = false
-    for (var j = 0; j < storedEvents.length; j++) {
-      if (events[i].id === storedEvents[j].id) {
-        exists = true
-        break
-      }
-    }
-    if (!exists && events[i].type === 'goal') {
-      storedEvents.push(trimEvent(events[i]))
-      newGoals.push(trimEvent(events[i]))
-      // a new goal exists! send it to the event and trigger the call for goal
-      handleGoal(events[i].player_id)
-    }
-  }
-  // here i have all the new goals
-  console.log(newGoals.length)
-  // how can I handle new goals here
-  return storedEvents
+  console.log('finished updating live matches!')
 }
 
 function trimMatch (match) {
@@ -169,7 +116,7 @@ function trimMatch (match) {
     venue: match.venue,
     home: match.localteam_name,
     away: match.visitorteam_name,
-    events: []
+    events: match.events
   }
   return obj
 }
