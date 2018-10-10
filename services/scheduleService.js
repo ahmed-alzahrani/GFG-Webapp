@@ -2,9 +2,8 @@ let fetch = require('node-fetch')
 let config = require('../config/config.js')
 let build = require('../prestart/build.js')
 let admin = require('../services/adminService.js')
-// let fs = require('fs')
 let mailService = require('../services/mailService.js')
-// let matchesStore = require('json-fs-store')('./Resources/Matches')
+
 // let url = config.baseUrl + 'matches?Authorization=' + config.apiKey // <--- URL for actual live matches
 let url = 'http://api.football-api.com/2.0/matches/?team_id=9406&from_date=21.06.2017&to_date=21.09.2017&Authorization=' + config.apiKey // url for testing specific string of spurs games during dev
 
