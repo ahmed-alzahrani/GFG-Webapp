@@ -32,7 +32,7 @@
     "moment": "^2.22.2",
     "node-fetch": "^2.1.2",
     "nodemailer": "^4.6.7",
-    "npm": "^6.1.0",
+    "npm": "^6.4.1",
     "progress": "^2.0.0",
     "rimraf": "^2.6.2",
     "supertest": "^3.1.0",
