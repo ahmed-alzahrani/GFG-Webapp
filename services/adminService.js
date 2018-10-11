@@ -21,7 +21,6 @@ db.settings(settings)
 
 exports.db = db
 
-exports.getProfile = GetProfile
 exports.deleteProfile = DeleteProfile
 exports.updateProfile = UpdateProfile
 
@@ -36,28 +35,6 @@ exports.getMatches = GetMatches
 exports.participants = Participants
 
 // PRIVATE IMPLEMENTATION
-
-// writes a new user object into the Firebase Firestore NoSQL database based on the auth user created
-
-function GetProfile (uid) {
-  var userRef = db.collection('users').doc(uid)
-  let response = userRef.get().then(function (doc) {
-    if (doc.exists) {
-      let obj = {
-        birthday: doc.data().birthday,
-        country: doc.data().country,
-        email: doc.data().email,
-        first: doc.data().first,
-        last: doc.data().last,
-        stats: doc.data().stats
-      }
-      return obj
-    } else {
-      return { code: 404 }
-    }
-  })
-  return response
-}
 
 function DeleteProfile (uid) {
   if (uid == null) {

@@ -35,10 +35,12 @@ app.get('/player/all', VerifyToken, function (req, res) {
 })
 
 app.get('/player/:playerId', VerifyToken, function (req, res) {
+  var exists = false
   adminService.db.collection('squads').get().then(snapshot => {
     snapshot.forEach(doc => {
       for (var i = 0; i < doc.data().squad.length; i++) {
         if (doc.data().squad[i].id === req.params.playerId) {
+          exists = true
           var obj = doc.data().squad[i]
           obj.teamName = doc.data().name
           obj.teamId = doc.id
@@ -46,9 +48,9 @@ app.get('/player/:playerId', VerifyToken, function (req, res) {
         }
       }
     })
-    res.status(404).send('player not found')
+    if (!exists) res.status(404).send('player not found')
   }).catch(err => {
-    res.status(500).send('error getting players: ', err)
+    console.log('error getting players: ', err)
   })
 })
 
@@ -83,16 +85,6 @@ app.get('/charities', VerifyToken, function (req, res) {
     res.status(200).send(response)
   }).catch(err => {
     res.status(500).send('error getting charities: ', err)
-  })
-})
-
-app.get('/user/profile', VerifyToken, function (req, res) {
-  adminService.getProfile(req.userId).then(function (profile) {
-    if (profile.code === 404) {
-      res.sendStatus(404)
-    } else {
-      res.status(200).send(profile)
-    }
   })
 })
 
